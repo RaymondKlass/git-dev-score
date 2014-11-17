@@ -68,6 +68,7 @@
     "morgan": "^1.0.0",
     "ms": "0.6.2",
     "nodemailer": "1.2.2",
+    "nodemon": "1.2.1",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",
     "passport-github": "^0.1.5",
