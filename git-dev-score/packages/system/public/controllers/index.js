@@ -23,7 +23,7 @@ angular.module('mean.system').controller('IndexController', ['$scope', 'Global',
       'gmap':{
         'name':'gmap',
         'text':'gmap lets you add geographical information to your applications objects',
-        'author':'linnovvv999111',
+        'author':'linnovate',
         'link':'http://www.qed42.com',
         'image':'/theme/assets/img/gmap.png'
       },
