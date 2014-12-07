@@ -3,6 +3,10 @@
 // The Package is past automatically as first parameter
 module.exports = function(Gitstats, app, auth, database) {
 
+  app.get('/gitstats/', function(req, res, next) {
+    res.send('basic lookup page');
+  });
+
   app.get('/gitstats/example/anyone', function(req, res, next) {
     res.send('Anyone can access this');
   });

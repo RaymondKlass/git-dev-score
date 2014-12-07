@@ -18,9 +18,8 @@ Gitstats.register(function(app, auth, database) {
 
   //We are adding a link to the main menu for all authenticated users
   Gitstats.menus.add({
-    title: 'gitstats example page',
-    link: 'gitstats example page',
-    roles: ['authenticated'],
+    title: 'GitStats',
+    link: 'gitstats developer lookup',
     menu: 'main'
   });
   

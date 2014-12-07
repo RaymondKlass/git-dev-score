@@ -6,5 +6,9 @@ angular.module('mean.gitstats').config(['$stateProvider',
       url: '/gitstats/example',
       templateUrl: 'gitstats/views/index.html'
     });
+    $stateProvider.state('gitstats developer lookup', {
+      url: '/gitstats',
+      templateUrl: 'gitstats/views/lookup.html'
+    });
   }
 ]);

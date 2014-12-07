@@ -1,5 +1,7 @@
 {
   "name": "gitstats",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {
+      "bootstrap": "~3.0.3"
+  }
 }
