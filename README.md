@@ -13,4 +13,7 @@ Compare yourself to other developers.  Find a developer based on the code they'v
 
 <h4>Run the Development Server</h4>
 <p>The development server automatically handles updating pages being served.  This is for development only.  From the root directory, run</p>
+<code>grunt</code>
+
+<h4>Production Server</h4>
 <code>sudo node server.js</code>
