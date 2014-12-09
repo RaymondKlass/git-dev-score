@@ -1,12 +1,22 @@
 'use strict';
 
+var gitstats = require('../controllers/gitstats');
+
 // The Package is past automatically as first parameter
 module.exports = function(Gitstats, app, auth, database) {
-
-  app.get('/gitstats/', function(req, res, next) {
+  
+  app.route('/gitstats')
+    .get(function(req, res, next) {
+      res.send('basic lookup here');
+    });
+  
+  app.route('/gitstats/test_ajax')
+    .get(gitstats.ajax_test);
+  
+  /*app.get('/gitstats/', function(req, res, next) {
     res.send('basic lookup page');
-  });
-
+  });*/
+  /*
   app.get('/gitstats/example/anyone', function(req, res, next) {
     res.send('Anyone can access this');
   });
@@ -26,5 +36,5 @@ module.exports = function(Gitstats, app, auth, database) {
       //Rendering a view from the Package server/views
       res.send(html);
     });
-  });
+  });*/
 };
