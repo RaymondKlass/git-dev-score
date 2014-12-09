@@ -15,5 +15,10 @@ Compare yourself to other developers.  Find a developer based on the code they'v
 <p>The development server automatically handles updating pages being served.  This is for development only.  From the root directory, run</p>
 <code>grunt</code>
 
+<h4>Testing</h4>
+<p>Currently Mocha is used for backend test, while Karma is used for front-end testing</p>
+<p>To run all test simply run</p>
+<code>npm test</code>
+
 <h4>Production Server</h4>
 <code>sudo node server.js</code>
