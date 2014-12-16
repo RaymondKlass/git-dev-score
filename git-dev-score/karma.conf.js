@@ -17,7 +17,9 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: _.flatten(_.values(assets.core.js)).concat([
       'packages/*/public/*.js',
-      'packages/*/public/*/*.js'
+      'packages/*/public/*/*.js',
+      'packages/custom/*/public/*.js',
+      'packages/custom/*/public/*/*.js'
     ]),
 
     // list of files to exclude
@@ -33,7 +35,10 @@ module.exports = function(config) {
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
       'packages/*/public/controllers/*.js': ['coverage'],
-      'packages/*/public/services/*.js': ['coverage']
+      'packages/*/public/services/*.js': ['coverage'],
+      'packages/custom/*/public/controllers/*.js': ['coverage'],
+      'packages/custom/*/public/services/*.js': ['coverage']
+      
     },
 
     coverageReporter: {
