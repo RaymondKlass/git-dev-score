@@ -1,6 +1,22 @@
-<div class="" data-ng-controller="GitstatsController">
-  <h1>Developer Lookups</h1>
-  <button ng-click="getMessage()">Get A Message</button>
-  <h5>{{message}}</h5>
+<div class="row" data-ng-controller="GitstatsController">
+  <div class="col-sm-12">
+    <h2 class="text-center">GitHub Developer Score</h2>
+  </div>
+  <form class="form-inline col-sm-6 col-sm-offset-3" role="form" ng-submit="getDev()">
+    <div class="form-group col-sm-10">
+      <div class="input-group col-sm-12">
+        <label class="sr-only" for="git-dev-username">Git Developer Username</label>
+        <input type="text" ng-model="git_dev_username" class="form-control" id="git-dev-username" placeholder="Enter GitHub Username">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Git Score</button>
+  </form>
 </div>
+    
+    
+    
+<!--     <h1>Developer Lookups</h1>
+  <button ng-click="getMessage()">Get A Message</button>
+  <h5>{{message}}</h5> -->
+
 
