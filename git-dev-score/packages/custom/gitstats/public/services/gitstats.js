@@ -6,3 +6,10 @@ angular.module('mean.gitstats').factory('Gitstats', [ '$resource',
       
   }
 ]);
+
+angular.module('mean.gitstats').factory('GitDev', ['$resource',
+  function($resource) {
+    return $resource('gitstats/git_developer', {});
+    
+  }
+]);

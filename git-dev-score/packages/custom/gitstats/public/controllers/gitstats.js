@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Global', 'Gitstats', 
-  function($scope, Global, Gitstats) {
+angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Global', 'Gitstats', 'GitDev',
+  function($scope, Global, Gitstats, GitDev) {
     $scope.global = Global;
     $scope.package = {
       name: 'gitstats'
@@ -16,8 +16,19 @@ angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Glo
       });
     };
     
-    $scope.getDev = function() {
-      console.log($scope.git_dev_username);
+    $scope.getDev = function(isValid) {
+      if (isValid) {
+        var git_developer = new GitDev({
+          username: $scope.git_dev_username});
+        
+        git_developer.$save( function(response) {
+          console.log(response);
+          console.log('Git Developer Submitted');
+        });
+        console.log($scope.git_dev_username);
+      } else {
+        console.log('Invalid Input');
+      }
     };
     
   }
