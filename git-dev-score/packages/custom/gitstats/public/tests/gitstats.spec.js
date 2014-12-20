@@ -56,6 +56,35 @@
                 );
             });
             
+            it('$scope.getDev should post a message if developer is present', function() {
+            
+                // fixture - expected Post Data
+                var postDeveloperData = function() {
+                    return {
+                        username:'Test-User'
+                    };
+                };
+                
+                // fixture - expected response data
+                var responseDeveloperData = function() {
+                    return {
+                        username: 'Test-User',
+                        repos: 5
+                    };
+                };
+                
+                // mock input values
+                scope.git_dev_username = 'Test-User';
+                
+                // Test post requret is sent
+                $httpBackend.expectPost('gitstats/git_developer', postdeveloperData()).respond(responseDeveloperData());
+                
+                // Run controller
+                scope.getDev(true);
+                $httpBackend.flush();
+                
+            });
+            
         });
     
     });

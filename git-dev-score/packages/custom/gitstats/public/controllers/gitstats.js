@@ -23,11 +23,7 @@ angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Glo
         
         git_developer.$save( function(response) {
           console.log(response);
-          console.log('Git Developer Submitted');
         });
-        console.log($scope.git_dev_username);
-      } else {
-        console.log('Invalid Input');
       }
     };
     
