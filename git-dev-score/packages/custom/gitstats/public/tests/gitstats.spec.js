@@ -77,7 +77,7 @@
                 scope.git_dev_username = 'Test-User';
                 
                 // Test post requret is sent
-                $httpBackend.expectPost('gitstats/git_developer', postdeveloperData()).respond(responseDeveloperData());
+                $httpBackend.expectPOST('gitstats/git_developer', postDeveloperData()).respond(responseDeveloperData());
                 
                 // Run controller
                 scope.getDev(true);
