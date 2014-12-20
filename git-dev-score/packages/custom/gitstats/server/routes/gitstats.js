@@ -10,6 +10,9 @@ module.exports = function(Gitstats, app, auth, database) {
       res.send('basic lookup here');
     });
   
+  app.route('/gitstats/git_developer')
+    .post(gitstats.git_developer_lookup);
+  
   app.route('/gitstats/test_ajax')
     .get(gitstats.ajax_test);
   

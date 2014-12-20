@@ -76,7 +76,7 @@
                 // mock input values
                 scope.git_dev_username = 'Test-User';
                 
-                // Test post requret is sent
+                // Test post request is sent
                 $httpBackend.expectPOST('gitstats/git_developer', postDeveloperData()).respond(responseDeveloperData());
                 
                 // Run controller
