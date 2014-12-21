@@ -28,4 +28,4 @@ node_modules
 .lock-wscript
 
 #github api params
-git-dev-score/packages/custom/gitstats/server/config/git_api.js
+git-dev-score/packages/custom/gitstats/server/config/*
