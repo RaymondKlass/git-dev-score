@@ -26,3 +26,5 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+packages/custom/gitstats/server/config/git-api.js
