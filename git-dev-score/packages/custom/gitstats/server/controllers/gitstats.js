@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
   GitDev = mongoose.model('GitDev'),
   request = require('request'),
-  async = require('async'),
+  /*async = require('async'),*/
   gitapi = require('../config/git_api');
 
 
@@ -25,7 +25,24 @@ exports.git_developer_lookup = function(req, res) {
   
   console.log(gitapi.git_base_url);
   
+  var query_string = {
+    client_id: gitapi.client_id,
+    client_secret: gitapi.client_secret
+  };
   
+  request({url:gitapi.git_base_url + '/users/' + developer, qs:query_string, headers:{'User-Agent':gitapi.user_agent}}, function(err, response, body) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(response.headers);
+      console.log(body);
+    }
+
+    res.json({status: 'Good'});
+  
+  });
+  
+  /*
   // Should probably upsert here instead...
   gitdev.save(function(err) {
     if (err) {
@@ -34,5 +51,5 @@ exports.git_developer_lookup = function(req, res) {
       });
     }
     res.json(gitdev);
-  });
+  }); */
 };
