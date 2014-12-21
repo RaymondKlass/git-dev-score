@@ -1,7 +1,10 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  GitDev = mongoose.model('GitDev');
+  GitDev = mongoose.model('GitDev'),
+  request = require('request'),
+  async = require('async'),
+  gitapi = require('../config/git_api');
 
 
 exports.ajax_test = function(req, res) {
@@ -15,11 +18,18 @@ exports.ajax_test = function(req, res) {
 
 exports.git_developer_lookup = function(req, res) {
 
-  var gitdev = new GitDev(req.body);
+  var gitdev = new GitDev(req.body),
+    developer = gitdev.username;
+    
+  console.log(developer);
   
+  console.log(gitapi.git_base_url);
+  
+  
+  // Should probably upsert here instead...
   gitdev.save(function(err) {
     if (err) {
-      return res.json(500, {
+      return res.status(500).json({
         error: 'Cannot create Git Developer'
       });
     }
