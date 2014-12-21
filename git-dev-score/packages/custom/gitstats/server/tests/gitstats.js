@@ -30,6 +30,20 @@ describe('<Unit Test>', function() {
                     done();
                 });
             });
+            
+            it('Should not allow duplicate users to exist - throws error', function(done) {
+                return gitdev.save(function(err) {
+                    var gitdev2 = new GitDev({
+                        username: 'Test Developer'
+                    });
+                    
+                    gitdev2.save(function(err) {
+                        should.exist(err);
+                        err.code.should.equal(11000);
+                        done();
+                    });      
+                });
+            });
         
         });
         
