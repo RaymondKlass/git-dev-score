@@ -33,5 +33,10 @@ describe('<Unit Test>', function() {
         
         });
         
+        afterEach( function(done) {
+            gitdev.remove();
+            done();
+        });
+        
     });
 });
