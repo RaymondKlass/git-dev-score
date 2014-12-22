@@ -44,11 +44,26 @@ exports.git_developer_lookup = function(req, res) {
         user = api_res;
         // remove the headers from the github response obj - no reasons to save them
         delete user.meta;
-        console.log('hi');
+        user = {
+          login: user.login,
+          id: user.id
+        }
+        gitdev.user = user
+        console.log('GITDEV:');
+        console.log(gitdev);
+        
+        gitdev.save(function(err) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('success');
+            console.log(gitdev);
+          }
+        });
       }
     }
   );
-  
+  // This won't work since the network call is async
   console.log(user);
   
   /*

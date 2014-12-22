@@ -3,9 +3,22 @@
 // Dependenices
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
+
+
+var userObj = {
+  login: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  id: {
+    type: Number,
+    required: true
+  }
+}
+
   
 // GitDev Schema
-
 var GitDevSchema = new Schema({
   created: {
     type: Date,
@@ -16,7 +29,8 @@ var GitDevSchema = new Schema({
     required: true,
     trim: true,
     unique: true
-  }
+  },
+  user: userObj
 });
 
 
