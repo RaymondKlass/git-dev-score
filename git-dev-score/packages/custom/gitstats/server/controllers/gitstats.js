@@ -20,28 +20,8 @@ exports.ajax_test = function(req, res) {
 exports.git_developer_lookup = function(req, res) {
 
   var gitdev = new GitDev(req.body),
-    developer = gitdev.username;
-    
-  console.log(developer);
-  
-  //console.log(gitapi.git_base_url);
-  /*
-  var query_string = {
-    client_id: gitapi.client_id,
-    client_secret: gitapi.client_secret
-  }; */
-  /* -- uses request library - exchanging for github api - node library via npm
-  request({url:gitapi.git_base_url + '/users/' + developer, qs:query_string, headers:{'User-Agent':gitapi.user_agent}}, function(err, response, body) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(response.headers);
-      console.log(body);
-    }
-
-    res.json({status: 'Good'});
-  
-  }); */
+    developer = gitdev.username,
+    user = {};
   
   var github = new GitHubApi({
     version: '3.0.0',
@@ -61,10 +41,16 @@ exports.git_developer_lookup = function(req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.json(api_res);
+        user = api_res;
+        // remove the headers from the github response obj - no reasons to save them
+        delete user.meta;
+        console.log('hi');
       }
     }
   );
+  
+  console.log(user);
+  
   /*
   // Should probably upsert here instead...
   gitdev.save(function(err) {
