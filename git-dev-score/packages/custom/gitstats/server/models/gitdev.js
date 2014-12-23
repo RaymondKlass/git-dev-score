@@ -15,7 +15,7 @@ var userObj = {
     type: Number,
     required: true
   }
-}
+};
 
   
 // GitDev Schema

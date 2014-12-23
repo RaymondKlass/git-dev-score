@@ -47,8 +47,8 @@ exports.git_developer_lookup = function(req, res) {
         user = {
           login: user.login,
           id: user.id
-        }
-        gitdev.user = user
+        };
+        gitdev.user = user;
         console.log('GITDEV:');
         console.log(gitdev);
         
