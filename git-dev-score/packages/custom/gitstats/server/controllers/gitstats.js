@@ -1,9 +1,9 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-  GitDev = mongoose.model('GitDev'),
+var /*mongoose = require('mongoose'),*/
+  /*GitDev = mongoose.model('GitDev'),*/
   /*request = require('request'),*/
-  /*async = require('async'),*/
+  async = require('async'),
   GitApiConfig = require('../config/git_api'),
   GitHubApi = require('github');
 
@@ -19,9 +19,7 @@ exports.ajax_test = function(req, res) {
 
 exports.git_developer_lookup = function(req, res) {
 
-  var gitdev = new GitDev(req.body),
-    developer = gitdev.username,
-    user = {};
+  var developer = req.body.username;
   
   var github = new GitHubApi({
     version: '3.0.0',
@@ -30,35 +28,44 @@ exports.git_developer_lookup = function(req, res) {
     }
   });
   
-  github.authenticate({
-    type: 'oauth',
-    key: GitApiConfig.client_id,
-    secret: GitApiConfig.client_secret
+  // Just authenticate against my app for now -
+  // later we can add the ability for user to authenticate themselves
+  // for private element access
+  var authenticate_github = function () {
+    github.authenticate({
+      type: 'oauth',
+      key: GitApiConfig.client_id,
+      secret: GitApiConfig.client_secret
+    });
+  };
+  
+  async.series([
+    function(callback) {
+      
+      authenticate_github();
+      
+      github.user.getFrom({user:developer}, 
+        function(err, api_res) {
+          var user;
+          if (!err) {
+            user = api_res;
+            // remove the headers from the github response obj - no reasons to save them
+            delete user.meta;
+          }
+          callback(err, user);
+        }
+      );
+    }
+  ],
+  function(err, results) {
+    console.log(results);
+    console.log('Result Reached');
   });
   
-  github.user.getFrom({user:developer}, 
-    function(err, api_res) {
-      if (err) {
-        console.log(err);
-      } else {
-        user = api_res;
-        // remove the headers from the github response obj - no reasons to save them
-        delete user.meta;
-        gitdev.user = user;
-        
-        gitdev.save(function(err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('success');
-            console.log(gitdev);
-          }
-        });
-      }
-    }
-  );
+  // gitdev = new GitDev(req.body)
+  
   // This won't work since the network call is async
-  console.log(user);
+  //console.log(user);
   
   /*
   // Should probably upsert here instead...
