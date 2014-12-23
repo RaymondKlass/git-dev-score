@@ -35,30 +35,20 @@ var userObj = {
   public_gists: Number,
   followers: Number,
   following: Number,
-  created_at: String,
-  updated_at: String
+  created_at: Date,
+  updated_at: Date
 };
 
   
 // GitDev Schema
 var GitDevSchema = new Schema({
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  username: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true
-  },
   user: userObj
 });
 
 
 // Validations
-GitDevSchema.path('username').validate(function(username) {
-  return !!username;
+GitDevSchema.path('user.login').validate(function(user) {
+  return !!user.login;
 }, 'Username cannot be blank');
 
 
