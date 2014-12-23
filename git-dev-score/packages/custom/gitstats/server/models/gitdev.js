@@ -5,16 +5,38 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 
+
 var userObj = {
-  login: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  id: {
-    type: Number,
-    required: true
-  }
+  login: String,
+  id: Number,
+  avatar_url: String,
+  gravatar_id: String,
+  url: String,
+  html_url: String,
+  followers_url: String,
+  following_url: String,
+  gists_url: String,
+  starred_url: String,
+  subscriptions_url: String,
+  organizations_url: String,
+  repos_url: String,
+  events_url: String,
+  received_events_url: String,
+  type: { type:String},
+  site_admin: String,
+  name: String,
+  company: String,
+  blog: String,
+  location: String,
+  email: String,
+  hireable: Boolean,
+  bio: String,
+  public_repos: Number,
+  public_gists: Number,
+  followers: Number,
+  following: Number,
+  created_at: String,
+  updated_at: String
 };
 
   

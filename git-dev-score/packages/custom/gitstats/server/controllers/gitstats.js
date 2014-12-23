@@ -44,13 +44,7 @@ exports.git_developer_lookup = function(req, res) {
         user = api_res;
         // remove the headers from the github response obj - no reasons to save them
         delete user.meta;
-        user = {
-          login: user.login,
-          id: user.id
-        };
         gitdev.user = user;
-        console.log('GITDEV:');
-        console.log(gitdev);
         
         gitdev.save(function(err) {
           if (err) {
