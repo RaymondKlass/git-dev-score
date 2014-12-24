@@ -1,7 +1,7 @@
 'use strict';
 
-var /*mongoose = require('mongoose'),*/
-  /*GitDev = mongoose.model('GitDev'),*/
+var mongoose = require('mongoose'),
+  GitDev = mongoose.model('GitDev'),
   /*request = require('request'),*/
   async = require('async'),
   GitApiConfig = require('../config/git_api'),
@@ -19,7 +19,8 @@ exports.ajax_test = function(req, res) {
 
 exports.git_developer_lookup = function(req, res) {
 
-  var developer = req.body.username;
+  var developer = req.body.username,
+    gitdev = new GitDev({});
   
   var github = new GitHubApi({
     version: '3.0.0',
@@ -58,8 +59,17 @@ exports.git_developer_lookup = function(req, res) {
     }
   ],
   function(err, results) {
-    console.log(results);
-    console.log('Result Reached');
+  
+    gitdev.user = results[0];
+    gitdev.save(function(err) {
+      if (err) {
+        return res.status(500).json({
+          error: 'Cannot Save Developer'
+        });
+      } 
+      res.json(gitdev);
+    });
+    
   });
   
   // gitdev = new GitDev(req.body)
