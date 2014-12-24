@@ -61,6 +61,7 @@ exports.git_developer_lookup = function(req, res) {
   function(err, results) {
   
     gitdev.user = results[0];
+    
     gitdev.save(function(err) {
       if (err) {
         return res.status(500).json({
