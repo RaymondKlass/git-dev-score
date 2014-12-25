@@ -40,16 +40,21 @@ exports.git_developer_lookup = function(req, res) {
     });
   };
   
+  var git_wrapper = GitApiConfig.git_api_wrapper;
+  
+  git_wrapper.authenticate_app();
+  
   async.series([
     function(callback) {
       
       authenticate_github();
       
-      github.user.getFrom({user:developer}, 
+      git_wrapper.github.user.getFrom({user:developer}, 
         function(err, api_res) {
           var user;
           if (!err) {
             user = api_res;
+            console.log(user.meta);
             // remove the headers from the github response obj - no reasons to save them
             delete user.meta;
           }
@@ -65,7 +70,7 @@ exports.git_developer_lookup = function(req, res) {
           var repos;
           if (!err) {
             repos = api_res;
-            console.log(api_res);
+            //console.log(api_res);
           }
           callback(err, repos);
         }
