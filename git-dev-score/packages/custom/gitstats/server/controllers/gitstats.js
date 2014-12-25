@@ -56,7 +56,22 @@ exports.git_developer_lookup = function(req, res) {
           callback(err, user);
         }
       );
+    },
+    function(callback) {
+      authenticate_github();
+      
+      github.repos.getFromUser({user:developer},
+        function(err, api_res) {
+          var repos;
+          if (!err) {
+            repos = api_res;
+            console.log(api_res);
+          }
+          callback(err, repos);
+        }
+      );
     }
+    
   ],
   function(err, results) {
   
