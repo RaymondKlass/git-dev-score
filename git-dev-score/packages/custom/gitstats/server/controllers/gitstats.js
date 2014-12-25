@@ -79,6 +79,7 @@ exports.git_developer_lookup = function(req, res) {
     
     gitdev.save(function(err) {
       if (err) {
+        console.log(err);
         return res.status(500).json({
           error: 'Cannot Save Developer'
         });
