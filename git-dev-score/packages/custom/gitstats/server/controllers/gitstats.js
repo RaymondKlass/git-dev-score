@@ -2,10 +2,8 @@
 
 var mongoose = require('mongoose'),
   GitDev = mongoose.model('GitDev'),
-  /*request = require('request'),*/
   async = require('async'),
-  GitApiConfig = require('../config/git_api'),
-  GitHubApi = require('github');
+  GitApiConfig = require('../config/git_api');
 
 
 exports.ajax_test = function(req, res) {
@@ -20,34 +18,12 @@ exports.ajax_test = function(req, res) {
 exports.git_developer_lookup = function(req, res) {
 
   var developer = req.body.username,
-    gitdev = new GitDev({});
-  
-  var github = new GitHubApi({
-    version: '3.0.0',
-    headers: {
-      'user-agent': GitApiConfig.user_agent
-    }
-  });
-  
-  // Just authenticate against my app for now -
-  // later we can add the ability for user to authenticate themselves
-  // for private element access
-  var authenticate_github = function () {
-    github.authenticate({
-      type: 'oauth',
-      key: GitApiConfig.client_id,
-      secret: GitApiConfig.client_secret
-    });
-  };
-  
-  var git_wrapper = GitApiConfig.git_api_wrapper;
-  
-  git_wrapper.authenticate_app();
+    gitdev = new GitDev({}),
+    git_wrapper = GitApiConfig.git_api_wrapper;
   
   async.series([
     function(callback) {
-      
-      authenticate_github();
+      git_wrapper.authenticate_app();
       
       git_wrapper.github.user.getFrom({user:developer}, 
         function(err, api_res) {
@@ -63,9 +39,9 @@ exports.git_developer_lookup = function(req, res) {
       );
     },
     function(callback) {
-      authenticate_github();
+      git_wrapper.authenticate_app();
       
-      github.repos.getFromUser({user:developer},
+      git_wrapper.github.repos.getFromUser({user:developer},
         function(err, api_res) {
           var repos;
           if (!err) {
@@ -93,20 +69,5 @@ exports.git_developer_lookup = function(req, res) {
     });
     
   });
-  
-  // gitdev = new GitDev(req.body)
-  
-  // This won't work since the network call is async
-  //console.log(user);
-  
-  /*
-  // Should probably upsert here instead...
-  gitdev.save(function(err) {
-    if (err) {
-      return res.status(500).json({
-        error: 'Cannot create Git Developer'
-      });
-    }
-    res.json(gitdev);
-  }); */
+
 };
