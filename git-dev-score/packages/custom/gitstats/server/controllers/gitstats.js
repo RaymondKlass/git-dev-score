@@ -21,7 +21,7 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  async.series([
+  async.parallel([
     function(callback) {
       git_wrapper.authenticate_app();
       
@@ -30,7 +30,6 @@ exports.git_developer_lookup = function(req, res) {
           var user;
           if (!err) {
             user = api_res;
-            console.log(user.meta);
             // remove the headers from the github response obj - no reasons to save them
             delete user.meta;
           }
@@ -46,7 +45,6 @@ exports.git_developer_lookup = function(req, res) {
           var repos;
           if (!err) {
             repos = api_res;
-            //console.log(api_res);
           }
           callback(err, repos);
         }
@@ -64,7 +62,8 @@ exports.git_developer_lookup = function(req, res) {
         return res.status(500).json({
           error: 'Cannot Save Developer'
         });
-      } 
+      }
+      console.log('Saved No Problem'); 
       res.json(gitdev);
     });
     

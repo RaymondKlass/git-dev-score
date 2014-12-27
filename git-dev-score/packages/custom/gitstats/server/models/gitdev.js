@@ -9,9 +9,16 @@ var mongoose = require('mongoose'),
 var userObj = {
   login:{
     type: String,
-    unique: true
+    index: {
+      unique: true
+    }
   },
-  id: Number,
+  id: {
+    type: Number,
+    index: {
+      unique: true
+    }
+  },
   avatar_url: String,
   gravatar_id: String,
   url: String,
