@@ -13,6 +13,12 @@ var userObj = {
         unique: true
       }
     },
+    login_lower: {
+      type: String,
+      index: {
+        unique: true
+      }
+    },
     id: {
       type: Number,
       index: {

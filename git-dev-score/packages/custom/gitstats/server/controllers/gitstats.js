@@ -22,34 +22,53 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  async.parallel({
-    user: function(callback) {
-      git_wrapper.authenticate_app(
-        git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); })
-      );
-    },
-    repos: function(callback) {
-      git_wrapper.authenticate_app(
-        git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); })
-      );
-    }
-  },
-  function(err, results) {
+  var query = GitDev.where({'user.login_lower' : developer.toLowerCase()});
   
-    gitdev.user = results.user;
-    gitdev.repos = results.repos;
-
-    var gitdev_obj = gitdev.toObject();
-    delete gitdev_obj._id;
+  async.series([
+    function() {
+      query.findOne( function(err, gitDeveloper) {
+        if (err) {
+          console.log(err);
+          res.json({'Status' : 'Error'});
+        } else if (gitDeveloper) {
+          res.json(gitDeveloper);
+          return;
+        }
+      });
+    },
+    function() {
+      console.log('HIT parallel');
+      async.parallel({
+        user: function(callback) {
+          git_wrapper.authenticate_app(
+            git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); })
+          );
+        },
+        repos: function(callback) {
+          git_wrapper.authenticate_app(
+            git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); })
+          );
+        }
+      },
+      function(err, results) {
+      
+        gitdev.user = results.user;
+        gitdev.user.login_lower = results.user.login.toLowerCase();
+        gitdev.repos = results.repos;
     
-    GitDev.findOneAndUpdate({'user.id': gitdev.user.id}, gitdev_obj, {upsert:true}, function(err, row) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.json(row);
-      }
-    });
-    
-  });
-
+        var gitdev_obj = gitdev.toObject();
+        delete gitdev_obj._id;
+        
+        GitDev.findOneAndUpdate({'user.id': gitdev.user.id}, gitdev_obj, {upsert:true}, function(err, row) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('DEV Saved');
+            res.json(row);
+          }
+        });
+        
+      });
+    }
+  ]);
 };
