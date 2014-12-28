@@ -15,14 +15,15 @@ exports.ajax_test = function(req, res) {
 };
 
 
+
 exports.git_developer_lookup = function(req, res) {
 
   var developer = req.body.username,
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  async.parallel([
-    function(callback) {
+  async.parallel({
+    user: function(callback) {
       git_wrapper.authenticate_app();
       
       git_wrapper.github.user.getFrom({user:developer}, 
@@ -37,7 +38,7 @@ exports.git_developer_lookup = function(req, res) {
         }
       );
     },
-    function(callback) {
+    repos: function(callback) {
       git_wrapper.authenticate_app();
       
       git_wrapper.github.repos.getFromUser({user:developer},
@@ -51,20 +52,20 @@ exports.git_developer_lookup = function(req, res) {
       );
     }
     
-  ],
+  },
   function(err, results) {
   
-    gitdev.user = results[0];
+    gitdev.user = results.user;
+    console.log(results.user);
+    var gitdev_obj = gitdev.toObject();
+    delete gitdev_obj._id;
     
-    gitdev.save(function(err) {
+    GitDev.findOneAndUpdate({'user.id': gitdev.user.id}, gitdev_obj, {upsert:true}, function(err, row) {
       if (err) {
         console.log(err);
-        return res.status(500).json({
-          error: 'Cannot Save Developer'
-        });
+      } else {
+        res.json(row);
       }
-      console.log('Saved No Problem'); 
-      res.json(gitdev);
     });
     
   });
