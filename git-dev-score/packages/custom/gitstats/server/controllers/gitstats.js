@@ -22,10 +22,13 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  var query = GitDev.where({'user.login_lower' : developer.toLowerCase()});
+  var now = new Date(),
+    dateMinus1Day =  now.setDate(now.getDate()-1),
+    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);
+
   
   async.series([
-    function() {
+    function(callback) {
       query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
@@ -33,11 +36,12 @@ exports.git_developer_lookup = function(req, res) {
         } else if (gitDeveloper) {
           res.json(gitDeveloper);
           return;
+        } else {
+          callback(null, null);
         }
       });
     },
-    function() {
-      console.log('HIT parallel');
+    function(callback) {
       async.parallel({
         user: function(callback) {
           git_wrapper.authenticate_app(
@@ -63,12 +67,12 @@ exports.git_developer_lookup = function(req, res) {
           if (err) {
             console.log(err);
           } else {
-            console.log('DEV Saved');
             res.json(row);
           }
         });
         
       });
+      callback(null, null);
     }
   ]);
 };

@@ -130,7 +130,8 @@ var userObj = {
 // GitDev Schema
 var GitDevSchema = new Schema({
   user: userObj,
-  repos: [repoObj]
+  repos: [repoObj],
+  updated_at: { type: Date, default: Date.now }
 });
 
 
@@ -138,7 +139,6 @@ var GitDevSchema = new Schema({
 GitDevSchema.path('user.login').validate(function(user) {
   return !!user.login;
 }, 'Username cannot be blank');
-
 
 // Assign model
 mongoose.model('GitDev', GitDevSchema);
