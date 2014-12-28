@@ -11,6 +11,12 @@
     </div>
     <button type="submit" class="btn btn-primary">Git Score</button>
   </form>
+  
+  <div class="col-sm-12 developer-info" ng-show="git_data">
+    <a ng-href="{{git_data.user.html_url}}">{{git_data.user.name}}</a>
+    <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar">
+  </div>
+
 </div>
     
     

@@ -1,3 +1,8 @@
 .gitstats-example h1 {
   background-color: purple
 }
+
+.git-dev-avatar {
+  width:100px;
+  height:100px;
+}
