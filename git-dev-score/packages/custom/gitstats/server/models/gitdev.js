@@ -123,7 +123,8 @@ var userObj = {
   
 // GitDev Schema
 var GitDevSchema = new Schema({
-  user: userObj
+  user: userObj,
+  repos: [repoObj]
 });
 
 

@@ -37,7 +37,8 @@ exports.git_developer_lookup = function(req, res) {
   function(err, results) {
   
     gitdev.user = results.user;
-    console.log(results.user);
+    gitdev.repos = results.repos;
+
     var gitdev_obj = gitdev.toObject();
     delete gitdev_obj._id;
     
