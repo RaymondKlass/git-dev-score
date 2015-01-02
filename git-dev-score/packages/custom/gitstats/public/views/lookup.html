@@ -20,8 +20,16 @@
         <a ng-href="{{git_data.user.html_url}}">{{git_data.user.name}}</a>
         <table class="table">
           <tr>
+            <td>Created At</td>
+            <td>{{git_data.user.created_at}}</td>
+          </tr>
+          <tr>
             <td>Public Repositories</td>
             <td>{{git_data.user.public_repos}}</td>
+          </tr>
+          <tr>
+            <td>Public Gists</td>
+            <td>{{git_data.user.public_gists}}</td>
           </tr>
           <tr>
             <td>Followers</td>
