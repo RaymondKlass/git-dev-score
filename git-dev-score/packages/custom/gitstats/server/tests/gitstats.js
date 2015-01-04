@@ -8,8 +8,7 @@ var should = require('should'),
     gitstats_controller = require('../controllers/gitstats.js'),
     git_user = {
         'id': 1234,
-        'login': 'My_Login',
-        'login_lower': 'my_login'
+        'login': 'My_Login'
     },
     git_repos = {'message': 'hi'};
 
@@ -35,8 +34,9 @@ describe('<Controller Test>', function() {
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
                 {
                     json: function(data) {
-                        console.log(data.user.id);
                         data.user.id.should.equal(1234);
+                        data.user.login.should.equal('My_Login');
+                        data.user.login_lower.should.equal('my_login');
                         done();
                         /*data.should.equal({ user: git_user,
                                             repos: git_repos});*/
