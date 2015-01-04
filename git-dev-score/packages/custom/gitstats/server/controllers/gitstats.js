@@ -44,18 +44,15 @@ exports.git_developer_lookup = function(req, res) {
     function(callback) {
       async.parallel({
         user: function(callback) {
-          git_wrapper.authenticate_app(
-            git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); })
-          );
+          git_wrapper.authenticate_app();
+          git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); });
         },
         repos: function(callback) {
-          git_wrapper.authenticate_app(
-            git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); })
-          );
+          git_wrapper.authenticate_app();
+          git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
         }
       },
       function(err, results) {
-      
         gitdev.user = results.user;
         gitdev.user.login_lower = results.user.login.toLowerCase();
         gitdev.repos = results.repos;
