@@ -32,8 +32,16 @@ git_user_mock.filteringPath(function(path) {
 describe('<Controller Test>', function() {
     describe('Git Developer Lookup', function() {
         it('Should be able to save a developer', function(done) {
-            gitstats_controller.git_developer_lookup({body: {username: 'my_login'}});
-            console.log('DONE with Test');
+            gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
+                {
+                    json: function(data) {
+                        console.log(data.user.id);
+                        data.user.id.should.equal(1234);
+                        done();
+                        /*data.should.equal({ user: git_user,
+                                            repos: git_repos});*/
+                    }
+            });
         });
     });
 });
