@@ -10,7 +10,14 @@ var should = require('should'),
         'id': 1234,
         'login': 'My_Login'
     },
-    git_repos = {'message': 'hi'};
+    git_repos = [
+        {'id': 123,
+         'name': 'my_first_repo'
+        },{
+         'id': 124,
+         'name': 'my_second_repo'
+        }
+    ];
 
 // Globals
 var gitdev,
@@ -37,6 +44,9 @@ describe('<Controller Test>', function() {
                         data.user.id.should.equal(1234);
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
+                        console.log(data);
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
                         done();
                         /*data.should.equal({ user: git_user,
                                             repos: git_repos});*/
