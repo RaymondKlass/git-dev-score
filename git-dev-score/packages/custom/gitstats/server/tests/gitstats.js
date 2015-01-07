@@ -41,20 +41,30 @@ describe('<Controller Test>', function() {
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
                 {
                     json: function(data) {
+                        // Test User creation
                         data.user.id.should.equal(1234);
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
-                        console.log(data);
+                        // Test Repos portion
                         data.repos[0].id.should.equal(123);
                         data.repos[1].id.should.equal(124);
                         done();
-                        /*data.should.equal({ user: git_user,
-                                            repos: git_repos});*/
                     }
             });
         });
     });
-});
+    afterEach( function(done) {
+        var query = GitDev.where({'user.id' : 1234});
+        query.findOne( function(err, gitDeveloper) {
+            if (!err) {
+                gitDeveloper.remove();
+            } else {
+                console.log(err);
+            }
+            done();
+        });
+    });
+}); 
 
 
 // Test Suites
@@ -63,7 +73,8 @@ describe('<Unit Test>', function() {
         beforeEach(function(done) {
             
             gitdev = new GitDev({
-                username: 'Test Developer'
+                user: git_user,
+                repos: git_repos
             });
             
             done();
@@ -71,10 +82,11 @@ describe('<Unit Test>', function() {
         
         describe('Method Save', function() {
             it('Should be able to save new Git Developer', function(done) {
+                console.log(gitdev);
                 return gitdev.save(function(err) {
                     should.not.exist(err);
-                    gitdev.username.should.equal('Test Developer');
-                    gitdev.created.should.not.have.length(0);
+                    gitdev.user.id.should.equal(1234);
+                    gitdev.updated_at.should.not.have.length(0);
                     done();
                 });
             });
@@ -82,7 +94,8 @@ describe('<Unit Test>', function() {
             it('Should not allow duplicate users to exist - throws error', function(done) {
                 return gitdev.save(function(err) {
                     var gitdev2 = new GitDev({
-                        username: 'Test Developer'
+                        user: git_user,
+                        repos: git_repos
                     });
                     
                     gitdev2.save(function(err) {

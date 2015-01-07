@@ -137,7 +137,7 @@ var GitDevSchema = new Schema({
 
 // Validations
 GitDevSchema.path('user.login').validate(function(user) {
-  return !!user.login;
+  return !!user;
 }, 'Username cannot be blank');
 
 // Assign model
