@@ -11,8 +11,8 @@
     </div>
     <button type="submit" class="btn btn-primary">Git Score</button>
   </form>
-  <div ng-show="git_data">
-      <div class="col-sm-4 page-header">
+  <div ng-show="git_data" class="col-sm-12">
+      <div class="col-sm-3 page-header">
         <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar col-sm-12">
         <h2><a ng-href="{{git_data.user.html_url}}">{{git_data.user.name}}</a></h2>
         <p>Created At {{git_data.user.created_at}}</p>
@@ -21,34 +21,15 @@
         <p>Public Gists: {{git_data.user.public_gists}}</p>
         <p>Followers: {{git_data.user.followers}}</p>
       </div>
-      <div class="col-sm-12 page-header">
-        <h1>Repositories</h1>
-      </div>
-      <div class="col-sm-12" ng-repeat="repo in git_data.repos">
-        <table class="table">
-          <tr>
-            <td>Repository</td>
-            <td><h3>{{repo.name}}</h3></td>
-          </tr>
-          <tr>
-            <td>Watchers</td>
-            <td>{{repo.watchers}}</td>
-          </tr>
-          <tr>
-            <td>Size</td>
-            <td>{{repo.size}}</td>
-          </tr>
-          <tr>
-            <td>Fork</td>
-            <td>{{repo.fork}}</td>
-          </tr>
-          <tr>
-            <td>Updated</td>
-            <td>{{repo.updated_at}}</td>
-          </tr>
-        </table>
-        <br />
-      </div>
+      <div class="col-sm-9 page-header">
+          <div class="col-sm-12" ng-repeat="repo in git_data.repos">
+            <h4>{{repo.name}}</h4></td>
+            <p>Watchers: {{repo.watchers}}</p>
+            <p>Size: {{repo.size}}</p>
+            <p>Fork: {{repo.fork}}</p>
+            <p>Updated: {{repo.updated_at}}</p>
+          </div>
+    </div>
   </div>
 </div>
     
