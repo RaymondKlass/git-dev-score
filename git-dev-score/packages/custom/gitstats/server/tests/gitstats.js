@@ -21,13 +21,14 @@ var should = require('should'),
 
 // Globals
 var gitdev,
-    git_user_mock = nock('https://api.github.com');
+    git_user_mock;
                         
 
 describe('<Controller Tests>', function() {
     describe('Git Developer Lookup', function() {
         
         beforeEach( function(done) {
+            git_user_mock = nock('https://api.github.com');
             git_user_mock.filteringPath(function(path) {
                 return path.split('?')[0];
             })
@@ -102,6 +103,78 @@ describe('<Controller Tests>', function() {
             });
         });
         
+        it('Saving a developer outside of 24 hours should trigger github api requests and update developer', function(done) {
+            gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
+                {
+                    json: function(data) {
+                        // Test User creation
+                        data.user.id.should.equal(1234);
+                        data.user.login.should.equal('My_Login');
+                        data.user.login_lower.should.equal('my_login');
+                        // Test Repos portion
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
+                        
+                        // Make sure that both mocks were actually used
+                        git_user_mock.isDone().should.equal(true);
+                        
+                        var query = GitDev.where({'user.id' : 1234});
+                        query.findOne( function(err, gitDeveloper) {
+                            if (!err) {
+                                var now = new Date(),
+                                    dateMinus2Day = now.setDate(now.getDate()-2);
+                                gitDeveloper.updated_at = dateMinus2Day
+                                gitDeveloper.save(function(err) {
+                                    if (!err) {
+                                        var git_user_update = {
+                                            'id': 1234,
+                                            'login': 'My_Login',
+                                            'name': 'Big Bad Developer'
+                                        },
+                                        git_repos_update = [
+                                            {'id': 123,
+                                             'name': 'my_first_repo1'
+                                            },{
+                                             'id': 124,
+                                             'name': 'my_second_repo2'
+                                            }
+                                        ]; 
+                                        
+                                        // Setup a new mock
+                                        git_user_mock.filteringPath(function(path) {
+                                                return path.split('?')[0];
+                                            })
+                                            .get('/users/my_login')
+                                            .reply(200, git_user_update)
+                                            .get('/users/my_login/repos')
+                                            .reply(200, git_repos_update);
+                                        
+                                        gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
+                                            {
+                                                json: function(data) {
+                                                    // Test User creation
+                                                    data.user.id.should.equal(1234);
+                                                    data.user.login.should.equal('My_Login');
+                                                    data.user.login_lower.should.equal('my_login');
+                                                    data.user.name.should.equal('Big Bad Developer');
+                                                    // Test Repos portion
+                                                    data.repos[0].id.should.equal(123);
+                                                    data.repos[1].id.should.equal(124);
+                                                    data.repos[0].name.should.equal('my_first_repo1');
+                                                    data.repos[1].name.should.equal('my_second_repo2');
+                                                    
+                                                    git_user_mock.isDone().should.equal(true);
+                                                    done();
+                                                }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+            });
+        });
+        
         afterEach( function(done) {
         
             // clean up any remaining mocks
@@ -111,10 +184,10 @@ describe('<Controller Tests>', function() {
             query.findOne( function(err, gitDeveloper) {
                 if (!err) {
                     gitDeveloper.remove();
+                    done();
                 } else {
                     console.log(err);
                 }
-                done();
             });
         });
     });
