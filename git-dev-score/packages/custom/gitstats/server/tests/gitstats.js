@@ -23,20 +23,21 @@ var should = require('should'),
 var gitdev,
     git_user_mock = nock('https://api.github.com');
                         
-                        
-git_user_mock.filteringPath(function(path) {
+
+describe('<Controller Tests>', function() {
+    describe('Git Developer Lookup', function() {
+        
+        beforeEach( function(done) {
+            git_user_mock.filteringPath(function(path) {
                 return path.split('?')[0];
             })
-            .log(console.log)
-            .persist()
             .get('/users/my_login')
             .reply(200, git_user)
             .get('/users/my_login/repos')
             .reply(200, git_repos);
-                        
-
-describe('<Controller Test>', function() {
-    describe('Git Developer Lookup', function() {
+            done();
+        });
+        
         it('Should be able to save a developer', function(done) {
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
                 {
@@ -48,20 +49,28 @@ describe('<Controller Test>', function() {
                         // Test Repos portion
                         data.repos[0].id.should.equal(123);
                         data.repos[1].id.should.equal(124);
+                        
+                        // Make sure that both mocks were actually used
+                        git_user_mock.isDone().should.equal(true);
+
                         done();
                     }
             });
         });
-    });
-    afterEach( function(done) {
-        var query = GitDev.where({'user.id' : 1234});
-        query.findOne( function(err, gitDeveloper) {
-            if (!err) {
-                gitDeveloper.remove();
-            } else {
-                console.log(err);
-            }
-            done();
+        afterEach( function(done) {
+        
+            // clean up any remaining mocks
+            nock.cleanAll();
+        
+            var query = GitDev.where({'user.id' : 1234});
+            query.findOne( function(err, gitDeveloper) {
+                if (!err) {
+                    gitDeveloper.remove();
+                } else {
+                    console.log(err);
+                }
+                done();
+            });
         });
     });
 }); 
