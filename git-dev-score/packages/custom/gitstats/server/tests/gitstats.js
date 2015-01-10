@@ -57,6 +57,51 @@ describe('<Controller Tests>', function() {
                     }
             });
         });
+        
+        it('Saving a developer a second time within 24 hours should not trigger github api requests', function(done) {
+            gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
+                {
+                    json: function(data) {
+                        // Test User creation
+                        data.user.id.should.equal(1234);
+                        data.user.login.should.equal('My_Login');
+                        data.user.login_lower.should.equal('my_login');
+                        // Test Repos portion
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
+                        
+                        // Make sure that both mocks were actually used
+                        git_user_mock.isDone().should.equal(true);
+                        
+                        // Setup a new mock
+                        git_user_mock.filteringPath(function(path) {
+                                return path.split('?')[0];
+                            })
+                            .get('/users/my_login')
+                            .reply(200, git_user)
+                            .get('/users/my_login/repos')
+                            .reply(200, git_repos);
+                        
+                        gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
+                            {
+                                json: function(data) {
+                                    // Test User creation
+                                    data.user.id.should.equal(1234);
+                                    data.user.login.should.equal('My_Login');
+                                    data.user.login_lower.should.equal('my_login');
+                                    // Test Repos portion
+                                    data.repos[0].id.should.equal(123);
+                                    data.repos[1].id.should.equal(124);
+                                    
+                                    git_user_mock.isDone().should.equal(false);
+                                    git_user_mock.pendingMocks().length.should.equal(2);
+                                    done();
+                                }
+                        });
+                    }
+            });
+        });
+        
         afterEach( function(done) {
         
             // clean up any remaining mocks
@@ -91,7 +136,6 @@ describe('<Unit Test>', function() {
         
         describe('Method Save', function() {
             it('Should be able to save new Git Developer', function(done) {
-                console.log(gitdev);
                 return gitdev.save(function(err) {
                     should.not.exist(err);
                     gitdev.user.id.should.equal(1234);
