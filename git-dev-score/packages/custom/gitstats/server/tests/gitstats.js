@@ -123,7 +123,7 @@ describe('<Controller Tests>', function() {
                             if (!err) {
                                 var now = new Date(),
                                     dateMinus2Day = now.setDate(now.getDate()-2);
-                                gitDeveloper.updated_at = dateMinus2Day
+                                gitDeveloper.updated_at = dateMinus2Day;
                                 gitDeveloper.save(function(err) {
                                     if (!err) {
                                         var git_user_update = {
