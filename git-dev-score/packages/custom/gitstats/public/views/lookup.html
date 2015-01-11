@@ -15,7 +15,7 @@
       <div class="col-sm-3 page-header">
         <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar col-sm-12">
         <h2><a ng-href="{{git_data.user.html_url}}">{{git_data.user.name}}</a></h2>
-        <p>Created At {{git_data.user.created_at}}</p>
+        <p>Joined {{git_data.user.created_at | date:'MMMM, yyyy'}}</p>
         <p>Company: {{git_data.user.company}}</p>
         <p>Public Repositories: {{git_data.user.public_repos}}</p>
         <p>Public Gists: {{git_data.user.public_gists}}</p>
@@ -27,16 +27,8 @@
             <p>Watchers: {{repo.watchers}}</p>
             <p>Size: {{repo.size}}</p>
             <p>Fork: {{repo.fork}}</p>
-            <p>Updated: {{repo.updated_at}}</p>
+            <p>Updated: {{repo.updated_at | date:'MMM d, yyyy'}}</p>
           </div>
     </div>
   </div>
 </div>
-    
-    
-    
-<!--     <h1>Developer Lookups</h1>
-  <button ng-click="getMessage()">Get A Message</button>
-  <h5>{{message}}</h5> -->
-
-
