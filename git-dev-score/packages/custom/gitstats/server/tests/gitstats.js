@@ -134,9 +134,6 @@ describe('<Controller Tests>', function() {
                                         git_repos_update = [
                                             {'id': 123,
                                              'name': 'my_first_repo1'
-                                            },{
-                                             'id': 124,
-                                             'name': 'my_second_repo2'
                                             }
                                         ]; 
                                         
@@ -159,9 +156,8 @@ describe('<Controller Tests>', function() {
                                                     data.user.name.should.equal('Big Bad Developer');
                                                     // Test Repos portion
                                                     data.repos[0].id.should.equal(123);
-                                                    data.repos[1].id.should.equal(124);
                                                     data.repos[0].name.should.equal('my_first_repo1');
-                                                    data.repos[1].name.should.equal('my_second_repo2');
+                                                    data.repos.length.should.equal(1);
                                                     
                                                     git_user_mock.isDone().should.equal(true);
                                                     done();
