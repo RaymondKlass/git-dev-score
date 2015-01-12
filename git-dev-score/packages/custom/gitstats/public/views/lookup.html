@@ -1,15 +1,12 @@
 <div class="row" data-ng-controller="GitstatsController">
-  <div class="col-sm-12">
-    <h2 class="text-center">GitHub Developer Score</h2>
-  </div>
   <form name="getGitDev" class="form-inline col-sm-6 col-sm-offset-3 git-dev-lookup" role="form" ng-submit="getDev(getGitDev.$valid)">
-    <div class="form-group col-sm-9">
+    <div class="form-group col-sm-12">
       <div class="input-group col-sm-12">
+        <h2>Find a Developer.</h2>
         <label class="sr-only" for="git-dev-username">Git Developer Username</label>
-        <input type="text" ng-model="git_dev_username" class="form-control" id="git-dev-username" placeholder="Enter GitHub Username" required>
+        <input type="text" ng-model="git_dev_username" class="form-control" id="git-dev-username" placeholder="Enter a language, location, specialty, whatever." required>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Get Developer</button>
   </form>
   <div ng-show="git_data && !git_data.status" class="col-sm-12">
       <div class="col-sm-3 page-header">
