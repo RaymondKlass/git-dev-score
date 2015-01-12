@@ -12,3 +12,8 @@
 .git-dev-lookup {
     padding-bottom:20px;
 }
+
+img.git-dev-avatar{
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
