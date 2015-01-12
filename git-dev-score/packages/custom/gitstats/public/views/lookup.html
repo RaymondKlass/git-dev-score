@@ -2,21 +2,23 @@
   <div class="col-sm-12">
     <h2 class="text-center">GitHub Developer Score</h2>
   </div>
-  <form name="getGitDev" class="form-inline col-sm-6 col-sm-offset-3" role="form" ng-submit="getDev(getGitDev.$valid)">
-    <div class="form-group col-sm-10">
+  <form name="getGitDev" class="form-inline col-sm-6 col-sm-offset-3 git-dev-lookup" role="form" ng-submit="getDev(getGitDev.$valid)">
+    <div class="form-group col-sm-9">
       <div class="input-group col-sm-12">
         <label class="sr-only" for="git-dev-username">Git Developer Username</label>
         <input type="text" ng-model="git_dev_username" class="form-control" id="git-dev-username" placeholder="Enter GitHub Username" required>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Git Score</button>
+    <button type="submit" class="btn btn-primary">Get Developer</button>
   </form>
   <div ng-show="git_data" class="col-sm-12">
       <div class="col-sm-3 page-header">
         <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar col-sm-12">
         <h2><a ng-href="{{git_data.user.html_url}}">{{git_data.user.name}}</a></h2>
-        <p>Joined {{git_data.user.created_at | date:'MMMM, yyyy'}}</p>
-        <p>Company: {{git_data.user.company}}</p>
+        <p>Joined {{git_data.user.created_at | date:'MMM, yyyy'}}</p>
+        <p>{{git_data.user.company}}</p>
+        <p>{{git_data.user.location}}</p>
+        <p>{{git_data.user.email}}</p>
         <p>Public Repositories: {{git_data.user.public_repos}}</p>
         <p>Public Gists: {{git_data.user.public_gists}}</p>
         <p>Followers: {{git_data.user.followers}}</p>

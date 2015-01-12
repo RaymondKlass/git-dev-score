@@ -9,7 +9,7 @@ angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Glo
     $scope.message = 'No Message Yet...';
     $scope.git_dev_username = null;
     $scope.git_data = null;
-    
+    $scope.date_now = new Date();
     
     $scope.getMessage = function() {
       Gitstats.get(function(data) {
