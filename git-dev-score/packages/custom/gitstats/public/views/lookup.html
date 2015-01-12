@@ -24,10 +24,7 @@
       <div class="col-sm-9 page-header">
           <div class="col-sm-12" ng-repeat="repo in git_data.repos">
             <h4>{{repo.name}}</h4></td>
-            <p>Watchers: {{repo.watchers}}</p>
-            <p>Size: {{repo.size}}</p>
-            <p>Fork: {{repo.fork}}</p>
-            <p>Updated: {{repo.updated_at | date:'MMM d, yyyy'}}</p>
+            <p>Watchers: {{repo.watchers}} Size: {{repo.size}} Fork: {{repo.fork}} Updated: {{repo.updated_at | date:'MMM d, yyyy'}}</p>
           </div>
     </div>
   </div>
