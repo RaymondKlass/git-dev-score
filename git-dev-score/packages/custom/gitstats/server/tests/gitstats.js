@@ -179,13 +179,41 @@ describe('<Controller Tests>', function() {
             var query = GitDev.where({'user.id' : 1234});
             query.findOne( function(err, gitDeveloper) {
                 if (!err) {
-                    gitDeveloper.remove();
+                    if (gitDeveloper) {
+                        gitDeveloper.remove();
+                    }
                     done();
                 } else {
                     console.log(err);
                 }
             });
         });
+        
+        it('A developer who is not found on github should return a status', function(done) {
+            nock.cleanAll();
+            git_user_mock = nock('https://api.github.com');
+            git_user_mock.filteringPath(function(path) {
+                return path.split('?')[0];
+            })
+            .get('/users/my_login')
+            .reply(404, undefined)
+            .get('/users/my_login/repos')
+            .reply(404, undefined);
+            
+            gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
+                {
+                    json: function(data) {
+                        // Test User creation
+                        data.status.should.equal('user not found');
+                        
+                        // Make sure that both mocks were actually used
+                        git_user_mock.isDone().should.equal(true);
+                        nock.cleanAll();
+                        done();
+                    }
+            });
+        });
+        
     });
 }); 
 

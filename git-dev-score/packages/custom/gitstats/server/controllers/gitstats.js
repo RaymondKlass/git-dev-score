@@ -53,20 +53,25 @@ exports.git_developer_lookup = function(req, res) {
         }
       },
       function(err, results) {
-        gitdev.user = results.user;
-        gitdev.user.login_lower = results.user.login.toLowerCase();
-        gitdev.repos = results.repos;
-    
-        var gitdev_obj = gitdev.toObject();
-        delete gitdev_obj._id;
+        if (results.user) {
+            gitdev.user = results.user;
+            gitdev.user.login_lower = results.user.login.toLowerCase();
+            gitdev.repos = results.repos;
         
-        GitDev.findOneAndUpdate({'user.id': gitdev.user.id}, gitdev_obj, {upsert:true}, function(err, row) {
-          if (err) {
-            console.log(err);
-          } else {
-            res.json(row);
-          }
-        });
+            var gitdev_obj = gitdev.toObject();
+            delete gitdev_obj._id;
+            
+            GitDev.findOneAndUpdate({'user.id': gitdev.user.id}, gitdev_obj, {upsert:true}, function(err, row) {
+              if (err) {
+                console.log(err);
+              } else {
+                res.json(row);
+              }
+            });
+        } else {
+            // Don't insert blank people - if we didn't reach by error - the user most likely doesn't exist
+            res.json({'status':'user not found'});
+        }
         
       });
       callback(null, null);
