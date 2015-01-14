@@ -48,7 +48,8 @@ exports.git_developer_lookup = function(req, res) {
           git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); });
         },
         repos: function(callback) {
-          var user_repos = []
+          var user_repos = [],
+              repos_callback = callback;
           async.series([
             function(callback) {
               git_wrapper.authenticate_app();
@@ -58,7 +59,17 @@ exports.git_developer_lookup = function(req, res) {
                   callback(err, api_res); 
               });
             },
-            function(callback)
+            function(callback) {
+              user_repos.forEach(function(element, index, array) {
+                console.log(element);
+              });
+              callback(null, null);
+            }
+          ], function(err, results) {
+            console.log('all done user repos');
+            repos_callback(null, user_repos);
+          });
+        }
       },
       function(err, results) {
         if (results.user) {
