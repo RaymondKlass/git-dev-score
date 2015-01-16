@@ -22,13 +22,16 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  var now = new Date(),
+  /*var now = new Date(),
     dateMinus1Day =  now.setDate(now.getDate()-1),
-    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);
+    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);*/
 
   
   async.series([
     function(callback) {
+      /* Always lookup Dev - Testing ONLY */
+      callback(null, null);
+      /*
       query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
@@ -39,7 +42,7 @@ exports.git_developer_lookup = function(req, res) {
         } else {
           callback(null, null);
         }
-      });
+      }); */
     },
     function(callback) {
       async.parallel({
@@ -60,13 +63,53 @@ exports.git_developer_lookup = function(req, res) {
               });
             },
             function(callback) {
+              var user_repo_func = [];
               user_repos.forEach(function(element, index, array) {
-                console.log(element);
+                user_repo_func.push(function(callback) {
+                  git_wrapper.authenticate_app();
+                  git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
+                    if (api_res.meta.status === 202) {
+                      var intervals = [1,2,4],
+                        timers = [],
+                        kill_all_timers = function() {
+                          timers.forEach(function (element, index, array) {
+                            clearTimeout(element);
+                          });
+                        };
+                        
+                      intervals.forEach(function(element, index, array) {
+                        timers.push(setTimeout(
+                          function() {
+                            git_wrapper.authenticate_app();
+                            git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
+                              if (api_res.meta.status !== 202) {
+                                kill_all_timers();
+                                
+                                callback(err, {name: element.name, data : api_res});
+                              }
+                            });
+                          }
+                          ), element * 1000);
+                      });
+                    } else {
+                      callback(err, {name: element.name, data : api_res});
+                    }
+                  });  
+                });
               });
-              callback(null, null);
+              
+              async.parallel(user_repo_func, function(err, results) {
+                if (err) {
+                  console.log('Error');
+                  console.log(err);
+                }
+                callback(null, results);
+              });
             }
           ], function(err, results) {
-            console.log('all done user repos');
+            console.log('Repo Investigation Results');
+            console.log(results);
+            
             repos_callback(null, user_repos);
           });
         }
