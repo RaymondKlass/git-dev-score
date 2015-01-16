@@ -124,7 +124,13 @@ var userObj = {
     open_issues: Number,
     watchers: Number,
     default_branch: String
-};
+  },
+  weekObj = {
+    w: Number,
+    a: Number,
+    d: Number,
+    c: Number
+  };
 
   
 // GitDev Schema

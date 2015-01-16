@@ -108,7 +108,8 @@ exports.git_developer_lookup = function(req, res) {
             }
           ], function(err, results) {
             console.log('Repo Investigation Results');
-            console.log(results);
+            console.log(results[1][0]);
+            console.log(results[1][0].data);
             
             repos_callback(null, user_repos);
           });
