@@ -160,7 +160,14 @@ var userObj = {
 // GitDev Schema
 var GitDevSchema = new Schema({
   user: userObj,
-  repos: [repoObj],
+  repos: [{
+    repo: repoObj,
+    stats: [{
+      author: authorObj,
+      total: Number,
+      weeks: [weekObj]
+    }]
+  }],
   updated_at: { type: Date, default: Date.now }
 });
 
