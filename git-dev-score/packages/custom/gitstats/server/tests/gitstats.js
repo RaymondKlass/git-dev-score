@@ -11,12 +11,16 @@ var should = require('should'),
         'login': 'My_Login'
     },
     git_repos = [
+      {repo:
         {'id': 123,
          'name': 'my_first_repo'
-        },{
+        }
+      },
+      {repo: {
          'id': 124,
          'name': 'my_second_repo'
         }
+      }
     ];
 
 // Globals
