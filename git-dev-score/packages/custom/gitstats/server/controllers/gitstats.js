@@ -111,7 +111,13 @@ exports.git_developer_lookup = function(req, res) {
             console.log(results[1][0]);
             console.log(results[1][0].data);
             
-            repos_callback(null, user_repos);
+            var repo_translate = [];
+            user_repos.forEach(function(element, index, array) {
+                repo_translate.push({repo: element});
+            });
+
+            console.log(repo_translate);
+            repos_callback(null, repo_translate);
           });
         }
       },

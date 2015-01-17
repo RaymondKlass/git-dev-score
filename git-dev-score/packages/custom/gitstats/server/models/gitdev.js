@@ -163,7 +163,7 @@ var GitDevSchema = new Schema({
   repos: [{
     repo: repoObj,
     stats: [{
-      author: authorObj,
+      author: repoAuthorObj,
       total: Number,
       weeks: [weekObj]
     }]
