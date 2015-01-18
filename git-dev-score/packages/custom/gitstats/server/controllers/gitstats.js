@@ -35,6 +35,7 @@ exports.git_developer_lookup = function(req, res) {
           console.log(err);
           res.json({'Status' : 'Error'});
         } else if (gitDeveloper) {
+          gitDeveloper.aggregateRepoOwner();
           res.json(gitDeveloper);
           return;
         } else {

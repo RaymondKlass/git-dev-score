@@ -177,5 +177,69 @@ GitDevSchema.path('user.login').validate(function(user) {
   return !!user;
 }, 'Username cannot be blank');
 
+
+// Methods - handle the weighting process calculations via these
+GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
+  // Handle the case that the user has no repos
+  if ( !this.repos.length) {
+    return null;
+  }
+  
+  var repoAgg = {},
+    user = '',
+    userContribAgg = {};
+  
+  this.repos.forEach(function(repoElement, index, array) {
+    console.log('REPO');
+    console.log(repoElement.stats);
+    repoAgg[repoElement.repo.id] = {
+      owner:{
+        c:0,
+        a:0,
+        d:0
+      },
+      others: {
+        c:0,
+        a:0,
+        d:0
+      }
+    };
+    
+    repoElement.stats.forEach(function(statElement, statIndex, statArray) {
+      console.log('STAT');
+      console.log(statElement);
+      if ( statElement.author.id === this.user.id) {
+        user = 'owner';
+      } else {
+        user = 'others';
+      }
+      
+      // We need to aggregate the stat element too.
+      userContribAgg = {
+        c:0,
+        a:0, 
+        d:0
+      };
+      
+      statElement.weeks.forEach( function(statWeekElement, statWeekIndex, statWeekArray) {
+        console.log(statWeekElement);
+        userContribAgg.c += statWeekElement.c;
+        userContribAgg.a += statWeekElement.a;
+        userContribAgg.d += statWeekElement.d;
+      });
+      
+      repoAgg[repoElement.repo.id][user].c += userContribAgg.c;
+      repoAgg[repoElement.repo.id][user].a += userContribAgg.a;
+      repoAgg[repoElement.repo.id][user].d += userContribAgg.d;
+      
+    });
+
+  });
+  
+  console.log(repoAgg);
+  
+};
+
+
 // Assign model
 mongoose.model('GitDev', GitDevSchema);
