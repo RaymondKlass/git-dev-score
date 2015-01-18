@@ -95,7 +95,7 @@ exports.git_developer_lookup = function(req, res) {
                   });  
                 });
               });
-              if 
+
               async.parallel(user_repo_func, function(err, results) {
                 if (err) {
                   console.log('Error');
