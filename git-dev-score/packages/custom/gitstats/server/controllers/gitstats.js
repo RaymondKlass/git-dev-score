@@ -85,19 +85,19 @@ exports.git_developer_lookup = function(req, res) {
                               if (api_res.meta.status !== 202) {
                                 kill_all_timers();
                                 
-                                callback(err, {name: element.name, data : api_res});
+                                callback(err, {name: element.id, data : api_res});
                               }
                             });
                           }
                           ), element * 1000);
                       });
                     } else {
-                      callback(err, {name: element.name, data : api_res});
+                      callback(err, {name: element.id, data : api_res});
                     }
                   });  
                 });
               });
-              
+              if 
               async.parallel(user_repo_func, function(err, results) {
                 if (err) {
                   console.log('Error');
