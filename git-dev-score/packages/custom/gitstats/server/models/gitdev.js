@@ -152,7 +152,7 @@ var userObj = {
     repos_url: String,
     events_url: String,
     received_events_url: String,
-    type: String,
+    type: { type:String},
     site_admin: Boolean
   };
 
@@ -187,11 +187,10 @@ GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
   
   var repoAgg = {},
     user = '',
-    userContribAgg = {};
+    userContribAgg = {},
+    self = this;
   
   this.repos.forEach(function(repoElement, index, array) {
-    console.log('REPO');
-    console.log(repoElement.stats);
     repoAgg[repoElement.repo.id] = {
       owner:{
         c:0,
@@ -206,9 +205,7 @@ GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
     };
     
     repoElement.stats.forEach(function(statElement, statIndex, statArray) {
-      console.log('STAT');
-      console.log(statElement);
-      if ( statElement.author.id === this.user.id) {
+      if ( statElement.author.id === self.user.id) {
         user = 'owner';
       } else {
         user = 'others';
@@ -222,7 +219,7 @@ GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
       };
       
       statElement.weeks.forEach( function(statWeekElement, statWeekIndex, statWeekArray) {
-        console.log(statWeekElement);
+        //console.log(statWeekElement);
         userContribAgg.c += statWeekElement.c;
         userContribAgg.a += statWeekElement.a;
         userContribAgg.d += statWeekElement.d;

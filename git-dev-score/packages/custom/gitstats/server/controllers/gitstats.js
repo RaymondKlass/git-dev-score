@@ -107,10 +107,16 @@ exports.git_developer_lookup = function(req, res) {
             }
           ], function(err, results) {
             
-            var repo_translate = [];
+            var repo_translate = [],
+                stats_obj = {};
+            
+            results[1].forEach(function(element, index, array) {
+                stats_obj[element.name] = element.data;
+            });
+            
             if (user_repos) {
                 user_repos.forEach(function(element, index, array) {
-                    repo_translate.push({repo: element});
+                    repo_translate.push({repo: element, stats: stats_obj[element.id]});
                 });
             }
 
