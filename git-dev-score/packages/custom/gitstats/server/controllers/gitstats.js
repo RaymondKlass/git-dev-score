@@ -29,8 +29,6 @@ exports.git_developer_lookup = function(req, res) {
   
   async.series([
     function(callback) {
-      /* Always lookup Dev - Testing ONLY */
-      //callback(null, null);
       
       query.findOne( function(err, gitDeveloper) {
         if (err) {
