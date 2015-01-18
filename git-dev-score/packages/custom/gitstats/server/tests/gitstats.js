@@ -52,8 +52,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].id.should.equal(123);
-                        data.repos[1].id.should.equal(124);
+                        data.repos[0].repo.id.should.equal(123);
+                        data.repos[1].repo.id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -72,8 +72,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].id.should.equal(123);
-                        data.repos[1].id.should.equal(124);
+                        data.repos[0].repo.id.should.equal(123);
+                        data.repos[1].repo.id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -95,8 +95,8 @@ describe('<Controller Tests>', function() {
                                     data.user.login.should.equal('My_Login');
                                     data.user.login_lower.should.equal('my_login');
                                     // Test Repos portion
-                                    data.repos[0].id.should.equal(123);
-                                    data.repos[1].id.should.equal(124);
+                                    data.repos[0].repo.id.should.equal(123);
+                                    data.repos[1].repo.id.should.equal(124);
                                     
                                     git_user_mock.isDone().should.equal(false);
                                     git_user_mock.pendingMocks().length.should.equal(2);
@@ -116,8 +116,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].id.should.equal(123);
-                        data.repos[1].id.should.equal(124);
+                        data.repos[0].repo.id.should.equal(123);
+                        data.repos[1].repo.id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -161,8 +161,8 @@ describe('<Controller Tests>', function() {
                                                     data.user.login_lower.should.equal('my_login');
                                                     data.user.name.should.equal('Big Bad Developer');
                                                     // Test Repos portion
-                                                    data.repos[0].id.should.equal(123);
-                                                    data.repos[0].name.should.equal('my_first_repo1');
+                                                    data.repos[0].repo.id.should.equal(123);
+                                                    data.repos[0].repo.name.should.equal('my_first_repo1');
                                                     data.repos.length.should.equal(1);
                                                     
                                                     git_user_mock.isDone().should.equal(true);
