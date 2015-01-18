@@ -11,17 +11,34 @@ var should = require('should'),
         'login': 'My_Login'
     },
     git_repos = [
-      {repo:
-        {'id': 123,
-         'name': 'my_first_repo'
-        }
+      {'id': 123,
+        'name': 'my_first_repo'
       },
-      {repo: {
-         'id': 124,
+      {'id': 124,
          'name': 'my_second_repo'
-        }
       }
-    ];
+    ],
+    git_repo_stats = {
+      meta: {
+        status: 200
+      },
+      author: {
+        'id': 123
+      },
+      total: 25, 
+      weeks:[
+        {w: 12,
+          a: 10,
+          d: 4,
+          c: 13
+        }, {
+          w: 3,
+          a: 4,
+          d: 7,
+          c: 2
+        }
+      ]
+    };
 
 // Globals
 var gitdev,
@@ -39,7 +56,12 @@ describe('<Controller Tests>', function() {
             .get('/users/my_login')
             .reply(200, git_user)
             .get('/users/my_login/repos')
-            .reply(200, git_repos);
+            .reply(200, git_repos)
+            .get('/repos/my_login/my_first_repo/stats/contributors')
+            .reply(200, git_repo_stats)
+            .get('/repos/my_login/my_second_repo/stats/contributors')
+            .reply(200, git_repo_stats)
+            .log(console.log);
             done();
         });
         
@@ -136,10 +158,8 @@ describe('<Controller Tests>', function() {
                                             'name': 'Big Bad Developer'
                                         },
                                         git_repos_update = [
-                                            {repo: 
-                                              {'id': 123,
+                                            {'id': 123,
                                               'name': 'my_first_repo1'
-                                              }
                                             }
                                         ]; 
                                         
@@ -150,7 +170,9 @@ describe('<Controller Tests>', function() {
                                             .get('/users/my_login')
                                             .reply(200, git_user_update)
                                             .get('/users/my_login/repos')
-                                            .reply(200, git_repos_update);
+                                            .reply(200, git_repos_update)
+                                            .get('/repos/my_login/my_first_repo1/stats/contributors')
+                                            .reply(200, git_repo_stats);
                                         
                                         gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
                                             {

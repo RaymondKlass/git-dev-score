@@ -22,16 +22,16 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  /*var now = new Date(),
+  var now = new Date(),
     dateMinus1Day =  now.setDate(now.getDate()-1),
-    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);*/
+    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);
 
   
   async.series([
     function(callback) {
       /* Always lookup Dev - Testing ONLY */
-      callback(null, null);
-      /*
+      //callback(null, null);
+      
       query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
@@ -42,7 +42,7 @@ exports.git_developer_lookup = function(req, res) {
         } else {
           callback(null, null);
         }
-      }); */
+      });
     },
     function(callback) {
       async.parallel({
@@ -107,16 +107,14 @@ exports.git_developer_lookup = function(req, res) {
               });
             }
           ], function(err, results) {
-            console.log('Repo Investigation Results');
-            console.log(results[1][0]);
-            console.log(results[1][0].data);
             
             var repo_translate = [];
-            user_repos.forEach(function(element, index, array) {
-                repo_translate.push({repo: element});
-            });
+            if (user_repos) {
+                user_repos.forEach(function(element, index, array) {
+                    repo_translate.push({repo: element});
+                });
+            }
 
-            console.log(repo_translate);
             repos_callback(null, repo_translate);
           });
         }
