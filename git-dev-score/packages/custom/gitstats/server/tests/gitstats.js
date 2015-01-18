@@ -136,8 +136,10 @@ describe('<Controller Tests>', function() {
                                             'name': 'Big Bad Developer'
                                         },
                                         git_repos_update = [
-                                            {'id': 123,
-                                             'name': 'my_first_repo1'
+                                            {repo: 
+                                              {'id': 123,
+                                              'name': 'my_first_repo1'
+                                              }
                                             }
                                         ]; 
                                         
