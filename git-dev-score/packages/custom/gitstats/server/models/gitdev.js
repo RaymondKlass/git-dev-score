@@ -154,6 +154,18 @@ var userObj = {
     received_events_url: String,
     type: { type:String},
     site_admin: Boolean
+  },
+  repoStatsAggObj = {
+    owner: {
+      c: Number,
+      a: Number,
+      d: Number
+    },
+    others: {
+      c: Number,
+      a: Number,
+      d: Number
+    }
   };
 
   
@@ -166,7 +178,8 @@ var GitDevSchema = new Schema({
       author: repoAuthorObj,
       total: Number,
       weeks: [weekObj]
-    }]
+    }],
+    statsAgg: repoStatsAggObj
   }],
   updated_at: { type: Date, default: Date.now }
 });
@@ -179,6 +192,7 @@ GitDevSchema.path('user.login').validate(function(user) {
 
 
 // Methods - handle the weighting process calculations via these
+
 GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
   // Handle the case that the user has no repos
   if ( !this.repos.length) {
@@ -232,7 +246,7 @@ GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
 
   });
   
-  console.log(repoAgg);
+  return(repoAgg);
   
 };
 

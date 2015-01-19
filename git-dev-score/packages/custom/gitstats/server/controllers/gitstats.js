@@ -22,26 +22,25 @@ exports.git_developer_lookup = function(req, res) {
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
   
-  var now = new Date(),
+  /*var now = new Date(),
     dateMinus1Day =  now.setDate(now.getDate()-1),
-    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);
+    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);*/
 
   
   async.series([
     function(callback) {
-      
-      query.findOne( function(err, gitDeveloper) {
+      callback(null, null);
+      /*query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
           res.json({'Status' : 'Error'});
         } else if (gitDeveloper) {
-          gitDeveloper.aggregateRepoOwner();
           res.json(gitDeveloper);
           return;
         } else {
           callback(null, null);
         }
-      });
+      });*/
     },
     function(callback) {
       async.parallel({
@@ -133,7 +132,16 @@ exports.git_developer_lookup = function(req, res) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
             gitdev.repos = results.repos;
-        
+            
+            if ( gitdev.repos.length && gitdev.repos ) {
+                var repo_stats = gitdev.aggregateRepoOwner();
+                gitdev.repos.forEach(function(repo, index, array) {
+                    console.log(repo_stats[repo.repo.id]);
+                });
+            }
+            
+            console.log(gitdev.toObject()); 
+            
             var gitdev_obj = gitdev.toObject();
             delete gitdev_obj._id;
             
