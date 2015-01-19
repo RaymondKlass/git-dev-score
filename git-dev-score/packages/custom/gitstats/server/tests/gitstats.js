@@ -58,8 +58,7 @@ describe('<Controller Tests>', function() {
             .get('/repos/my_login/my_first_repo/stats/contributors')
             .reply(200, git_repo_stats)
             .get('/repos/my_login/my_second_repo/stats/contributors')
-            .reply(200, git_repo_stats)
-            .log(console.log);
+            .reply(200, git_repo_stats);
             done();
         });
         
@@ -74,9 +73,10 @@ describe('<Controller Tests>', function() {
                         // Test Repos portion
                         data.repos[0].repo.id.should.equal(123);
                         data.repos[1].repo.id.should.equal(124);
-                        console.log(data.repos[0]);
                         data.repos[0].stats[0].author.id.should.equal(123);
                         data.repos[1].stats[0].author.id.should.equal(123);
+                        data.repos[0].statsAgg.owner.c.should.equal(0);
+                        data.repos[0].statsAgg.others.c.should.equal(15);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);

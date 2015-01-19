@@ -29,7 +29,7 @@ exports.git_developer_lookup = function(req, res) {
   
   async.series([
     function(callback) {
-      callback(null, null);
+
       query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
@@ -65,8 +65,10 @@ exports.git_developer_lookup = function(req, res) {
               user_repos.forEach(function(element, index, array) {
                 user_repo_func.push(function(callback) {
                   git_wrapper.authenticate_app();
+
                   git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                    if (api_res.meta.status === 202) {
+
+                    if (api_res.meta.hasOwnProperty('status') && api_res.meta.status === 202) {
                       var intervals = [1,2,4],
                         timers = [],
                         kill_all_timers = function() {
@@ -75,11 +77,12 @@ exports.git_developer_lookup = function(req, res) {
                           });
                         };
                         
-                      intervals.forEach(function(element, index, array) {
+                      intervals.forEach(function(intervalElement, index, array) {
                         timers.push(setTimeout(
                           function() {
                             git_wrapper.authenticate_app();
                             git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
+                              
                               if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== 202) {
                                 kill_all_timers();
 
@@ -87,7 +90,7 @@ exports.git_developer_lookup = function(req, res) {
                               }
                             });
                           }
-                          ), element * 1000);
+                          ), intervalElement * 1000);
                       });
                     } else {
                       callback(err, {name: element.id, data : api_res});
