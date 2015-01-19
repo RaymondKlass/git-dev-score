@@ -133,10 +133,7 @@ var userObj = {
   },
   repoAuthorObj = {
     id: {
-      type: Number,
-      index: {
-        unique: true
-      }
+      type: Number
     },
     login: String,
     avatar_url: String,
@@ -189,6 +186,7 @@ var GitDevSchema = new Schema({
 GitDevSchema.path('user.login').validate(function(user) {
   return !!user;
 }, 'Username cannot be blank');
+
 
 
 // Methods - handle the weighting process calculations via these
