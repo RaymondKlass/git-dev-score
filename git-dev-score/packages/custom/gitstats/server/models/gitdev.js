@@ -219,7 +219,6 @@ GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
       };
       
       statElement.weeks.forEach( function(statWeekElement, statWeekIndex, statWeekArray) {
-        //console.log(statWeekElement);
         userContribAgg.c += statWeekElement.c;
         userContribAgg.a += statWeekElement.a;
         userContribAgg.d += statWeekElement.d;

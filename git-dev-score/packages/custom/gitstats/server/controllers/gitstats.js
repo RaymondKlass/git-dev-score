@@ -81,9 +81,9 @@ exports.git_developer_lookup = function(req, res) {
                           function() {
                             git_wrapper.authenticate_app();
                             git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                              if (api_res.meta.status !== 202) {
+                              if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== 202) {
                                 kill_all_timers();
-                                
+
                                 callback(err, {name: element.id, data : api_res});
                               }
                             });
@@ -109,18 +109,22 @@ exports.git_developer_lookup = function(req, res) {
             
             var repo_translate = [],
                 stats_obj = {};
-            
-            results[1].forEach(function(element, index, array) {
-                stats_obj[element.name] = element.data;
-            });
-            
-            if (user_repos) {
-                user_repos.forEach(function(element, index, array) {
-                    repo_translate.push({repo: element, stats: stats_obj[element.id]});
-                });
-            }
 
-            repos_callback(null, repo_translate);
+            if ( results.length && results[0] ) {
+                results[1].forEach(function(element, index, array) {
+                    stats_obj[element.name] = element.data;
+                });
+                
+                if (user_repos) {
+                    user_repos.forEach(function(element, index, array) {
+                        repo_translate.push({repo: element, stats: stats_obj[element.id]});
+                    });
+                }
+    
+                repos_callback(null, repo_translate);
+            } else {
+                repos_callback(null, null);
+            }
           });
         }
       },
