@@ -1,0 +1,10 @@
+{
+  "name": "d3",
+  "_cacheHeaders": {
+    "Last-Modified": "Mon, 13 Jan 2014 18:19:11 GMT",
+    "Content-Type": "application/javascript"
+  },
+  "main": "index.js",
+  "_source": "http://cdnjs.cloudflare.com/ajax/libs/d3/3.0.8/d3.js",
+  "_target": "*"
+}
