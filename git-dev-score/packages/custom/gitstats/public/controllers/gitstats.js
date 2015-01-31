@@ -10,7 +10,12 @@ angular.module('mean.gitstats').controller('GitstatsController', ['$scope', 'Glo
     $scope.git_dev_username = null;
     $scope.git_data = null;
     $scope.date_now = new Date();
-    
+    $scope.d3Data = [
+      {name: 'Greg', score: 98},
+      {name: 'Ari', score: 96},
+      {name: 'Q', score: 75},
+      {name: 'Loser', score: 48}
+    ];
     $scope.getMessage = function() {
       Gitstats.get(function(data) {
         $scope.message = data.msg;

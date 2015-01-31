@@ -44,7 +44,6 @@
   </script>
   
   <!-- End D3 Testing -->
-  
   <form name="getGitDev" class="form-inline col-sm-6 col-sm-offset-3 git-dev-lookup" role="form" ng-submit="getDev(getGitDev.$valid)">
     <div class="form-group col-sm-12">
       <div class="input-group col-sm-12">
@@ -53,6 +52,7 @@
       </div>
     </div>
   </form>
+  <div d3-bars bar-height="20" bar-padding="5" data="d3Data"></div>
   <div ng-show="git_data && !git_data.status" class="col-sm-12">
       <div class="col-sm-3 page-header">
         <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar col-sm-12">
