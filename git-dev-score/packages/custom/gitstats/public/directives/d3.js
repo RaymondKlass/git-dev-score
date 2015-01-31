@@ -22,6 +22,18 @@ angular.module('d3AngularApp', ['d3'])
           var svg = d3.select(ele[0])
             .append('svg')
             .style('width', '100%');
+            
+          var formatData = function(data) {
+            var cData = [];
+            console.log(data);
+            cData.push({name: 'Additions',
+                        score: data.a});
+            cData.push({name: 'Deletions',
+                        score: data.d});
+            cData.push({name: 'Commits',
+                        score: data.c});
+            return cData;
+          };
  
           $window.onresize = function() {
             scope.$apply();
@@ -30,11 +42,11 @@ angular.module('d3AngularApp', ['d3'])
           scope.$watch(function() {
             return angular.element($window)[0].innerWidth;
           }, function() {
-            scope.render(scope.data);
+            scope.render(formatData(scope.data));
           });
  
           scope.$watch('data', function(newData) {
-            scope.render(newData);
+            scope.render(formatData(newData));
           }, true);
  
           scope.render = function(data) {
@@ -44,7 +56,7 @@ angular.module('d3AngularApp', ['d3'])
  
             renderTimeout = $timeout(function() {
               var width = d3.select(ele[0])[0][0].offsetWidth - margin,
-                  height = scope.data.length * (barHeight + barPadding),
+                  height = data.length * (barHeight + barPadding),
                   color = d3.scale.category20(),
                   xScale = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) {

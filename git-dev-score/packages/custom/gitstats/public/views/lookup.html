@@ -52,7 +52,7 @@
       </div>
     </div>
   </form>
-  <div d3-bars bar-height="20" bar-padding="5" data="d3Data"></div>
+  <!-- <div d3-bars bar-height="20" bar-padding="5" data="d3Data"></div> -->
   <div ng-show="git_data && !git_data.status" class="col-sm-12">
       <div class="col-sm-3 page-header">
         <img ng-src="{{git_data.user.avatar_url}}" class="git-dev-avatar col-sm-12">
@@ -72,6 +72,7 @@
             <p>Watchers: {{repo.repo.watchers}} | Size: {{repo.repo.size}} | Fork: {{repo.repo.fork}} | Updated: {{repo.repo.updated_at | date:'MMM d, yyyy'}}</p>
             <h4>Statistics</h4>
             <p>{{git_data.user.name}} Commits: {{repo.statsAgg.owner.c}} | Additions: {{repo.statsAgg.owner.a}} | Deletions: {{repo.statsAgg.owner.d}}</p>
+            <div d3-bars bar-height="20" bar-padding="5" data="repo.statsAgg.owner"></div>
             <p>Others Stats - Commits: {{repo.statsAgg.others.c}} | Additions: {{repo.statsAgg.others.a}} | Deletions: {{repo.statsAgg.others.d}}</p>
           </div>
     </div>
