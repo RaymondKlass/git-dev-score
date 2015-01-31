@@ -3,7 +3,6 @@
 angular.module('d3', [])
 .factory('d3Service', ['$document', '$window', '$q', '$rootScope',
   function($document, $window, $q, $rootScope) {
-    console.log('HERE I AM');
     var d = $q.defer(),
         d3service = {
           d3: function() { return d.promise; }

@@ -3,7 +3,6 @@
 angular.module('d3AngularApp', ['d3'])
 .directive('d3Bars', ['$window', '$timeout', 'd3Service', 
   function($window, $timeout, d3Service) {
-    console.log('Running directive');
     return {
       restrict: 'A',
       scope: {
@@ -31,27 +30,19 @@ angular.module('d3AngularApp', ['d3'])
           scope.$watch(function() {
             return angular.element($window)[0].innerWidth;
           }, function() {
-            console.log('init-1');
             scope.render(scope.data);
           });
  
           scope.$watch('data', function(newData) {
-            console.log('init-2');
-            console.log(newData);
             scope.render(newData);
           }, true);
  
           scope.render = function(data) {
-            console.log('REnder CAlled');
             svg.selectAll('*').remove();
-            console.log('1.2');
             if (!data) return;
-            console.log('1.5');
             if (renderTimeout) clearTimeout(renderTimeout);
-            console.log('Step 2');
  
             renderTimeout = $timeout(function() {
-              console.log('Inner Rend');
               var width = d3.select(ele[0])[0][0].offsetWidth - margin,
                   height = scope.data.length * (barHeight + barPadding),
                   color = d3.scale.category20(),
@@ -62,7 +53,6 @@ angular.module('d3AngularApp', ['d3'])
                     .range([0, width]);
  
               svg.attr('height', height);
-              console.log(barHeight);
               svg.selectAll('rect')
                 .data(data)
                 .enter()
