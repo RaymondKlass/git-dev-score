@@ -35,8 +35,9 @@ exports.git_developer_lookup = function(req, res) {
           console.log(err);
           res.json({'Status' : 'Error'});
         } else if (gitDeveloper) {
-          res.json(gitDeveloper);
-          return;
+          callback(null, null);
+          /*res.json(gitDeveloper);
+          return; */
         } else {
           callback(null, null);
         }
@@ -67,9 +68,10 @@ exports.git_developer_lookup = function(req, res) {
                   git_wrapper.authenticate_app();
 
                   git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-
-                    if (api_res.meta.hasOwnProperty('status') && api_res.meta.status === 202) {
-                      var intervals = [1,2,4],
+                    console.log(api_res.meta.status);
+                    if (api_res.meta.hasOwnProperty('status') && api_res.meta.status === '202 Accepted') {
+                      console.log('RETURN 202');
+                      var intervals = [1,2,4,10,20,50],
                         timers = [],
                         kill_all_timers = function() {
                           timers.forEach(function (element, index, array) {
@@ -78,19 +80,22 @@ exports.git_developer_lookup = function(req, res) {
                         };
                         
                       intervals.forEach(function(intervalElement, index, array) {
+                        console.log(intervalElement)
                         timers.push(setTimeout(
                           function() {
                             git_wrapper.authenticate_app();
                             git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                              
-                              if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== 202) {
+                              console.log('re-run');
+                              console.log(element.name);
+                              console.log(api_res.meta);
+                              if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
                                 kill_all_timers();
 
                                 callback(err, {name: element.id, data : api_res});
                               }
                             });
                           }
-                          ), intervalElement * 1000);
+                          ), 10000);
                       });
                     } else {
                       callback(err, {name: element.id, data : api_res});
