@@ -17,7 +17,6 @@ exports.ajax_test = function(req, res) {
 
 
 exports.git_developer_lookup = function(req, res) {
-
   var developer = req.body.username,
     gitdev = new GitDev({}),
     git_wrapper = GitApiConfig.git_api_wrapper;
@@ -29,7 +28,6 @@ exports.git_developer_lookup = function(req, res) {
   
   async.series([
     function(callback) {
-
       query.findOne( function(err, gitDeveloper) {
         if (err) {
           console.log(err);
@@ -65,13 +63,35 @@ exports.git_developer_lookup = function(req, res) {
               var user_repo_func = [];
               user_repos.forEach(function(element, index, array) {
                 user_repo_func.push(function(callback) {
+                  
                   git_wrapper.authenticate_app();
-
                   git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                    console.log(api_res.meta.status);
+                    
                     if (api_res.meta.hasOwnProperty('status') && api_res.meta.status === '202 Accepted') {
-                      console.log('RETURN 202');
-                      var intervals = [1,2,4,10,20,50],
+                      
+                      setTimeout(function(){
+                        git_wrapper.authenticate_app();
+                        git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
+
+                          if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
+                            callback(err, {name: element.id, data : api_res});
+                          } else {
+                            setTimeout(function(){
+                              git_wrapper.authenticate_app();
+                              git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
+      
+                                if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
+                                  callback(err, {name: element.id, data : api_res});
+                                }
+                                  // Here we might need another - we should switch to a library to manage this?
+                                
+                              });
+                            }, 5000);
+                          }
+                        });
+                      }, 5000);
+                      /*
+                      var intervals = [5],
                         timers = [],
                         kill_all_timers = function() {
                           timers.forEach(function (element, index, array) {
@@ -80,14 +100,16 @@ exports.git_developer_lookup = function(req, res) {
                         };
                         
                       intervals.forEach(function(intervalElement, index, array) {
-                        console.log(intervalElement)
+                        console.log(intervalElement);
+                        var intEl = intervalElement * 1000;
+                        console.log(intEl);
                         timers.push(setTimeout(
                           function() {
+
+                            console.log('running timeout APP ' + element.name);
                             git_wrapper.authenticate_app();
                             git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                              console.log('re-run');
-                              console.log(element.name);
-                              console.log(api_res.meta);
+
                               if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
                                 kill_all_timers();
 
@@ -95,8 +117,8 @@ exports.git_developer_lookup = function(req, res) {
                               }
                             });
                           }
-                          ), 10000);
-                      });
+                          ), 2000);
+                      }); */
                     } else {
                       callback(err, {name: element.id, data : api_res});
                     }
