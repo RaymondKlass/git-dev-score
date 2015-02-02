@@ -33,9 +33,8 @@ exports.git_developer_lookup = function(req, res) {
           console.log(err);
           res.json({'Status' : 'Error'});
         } else if (gitDeveloper) {
-          callback(null, null);
-          /*res.json(gitDeveloper);
-          return; */
+          res.json(gitDeveloper);
+          return; 
         } else {
           callback(null, null);
         }
