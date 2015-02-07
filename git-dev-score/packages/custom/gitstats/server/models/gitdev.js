@@ -197,12 +197,17 @@ GitDevSchema.path('user.login').validate(function(user) {
 GitDevSchema.virtual('eventsByType').get(function() {
   var eventsByType = {};
   this.events.forEach(function(event, index, events) {
+    // Aggregate event Types
     if (eventsByType.hasOwnProperty(event.type)) {
       eventsByType[event.type].count += 1;
     } else {
       eventsByType[event.type] = { count : 1 };
       eventsByType[event.type].label = eventTranslationTable[event.type];
     }
+    
+    // Aggregate events by repo
+    
+    
   });
   var eventsByTypeArray = [];
   for (var key in eventsByType) {
