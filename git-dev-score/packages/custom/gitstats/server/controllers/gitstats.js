@@ -51,15 +51,16 @@ GitQuery.prototype.get_user_events = function(developer, max_pages) {
   return function(callback) {
     var parallelFunc = [];
     for (var i = 1; i <= max_pages; i+=1) {
-      parallelFunc.push( function(callback) {
-        self.git_wrapper.authenticate_app();
-        self.git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
-      });
+      (function(iCopy) {
+        parallelFunc.push( function(callback) {
+          self.git_wrapper.authenticate_app();
+          self.git_wrapper.github.events.getFromUser({user:developer, page:iCopy}, function(err, api_res) { callback(err, api_res); });
+        });
+      }(i));
     }
     
     async.parallel(parallelFunc, function(err, result) {
       var api_concat = [];
-      console.log(result);
       if (!err) {
         // We should concatenate
         result.forEach(function(event_result, index, results_array) {
