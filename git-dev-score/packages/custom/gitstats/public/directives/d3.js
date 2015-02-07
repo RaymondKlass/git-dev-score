@@ -51,7 +51,7 @@ angular.module('d3AngularApp', ['d3'])
                     .domain([0, d3.max(data, function(d) {
                       return d.count;
                     })])
-                    .range([0, width]);
+                    .range([30, width]);
  
               svg.attr('height', height);
               svg.selectAll('rect')

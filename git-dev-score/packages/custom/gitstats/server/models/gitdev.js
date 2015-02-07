@@ -14,7 +14,8 @@ var eventTranslationTable = {
   'IssuesEvent': 'Issue',
   'IssueCommentEvent': 'Comment',
   'PullRequestEvent': 'Pull Request',
-  'ReleaseEvent': 'Release'
+  'ReleaseEvent': 'Release',
+  'CommitCommentEvent': 'Commit Comment'
 };
 
 
