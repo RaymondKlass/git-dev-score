@@ -75,13 +75,12 @@ exports.git_developer_lookup = function(req, res) {
         repos: git_wrap.get_user_repos(developer),
         events: git_wrap.get_user_events(developer),
       }, function(err, results) {
-        /*if (results.events) {
-          //console.log(results.events);
-        }*/
+        
         if (results.user) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
             gitdev.repos = results.repos;
+            gitdev.events = results.events;
             
             console.log(gitdev);
             

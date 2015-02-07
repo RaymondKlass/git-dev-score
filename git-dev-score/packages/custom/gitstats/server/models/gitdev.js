@@ -124,6 +124,35 @@ var userObj = {
     open_issues: Number,
     watchers: Number,
     default_branch: String
+  },
+  gitEventObj = {
+    type: String,
+    public: {
+      type: String
+    },
+    repo: {
+      id: Number,
+      name: String,
+      url: String
+    },
+    actor: {
+      id: Number,
+      login: String,
+      gravatar_url: String,
+      avatar_url: String,
+      url: String
+    },
+    org: {
+      id: Number,
+      login: String,
+      gravatar_url: String,
+      avatar_url: String,
+    },
+    created: Date,
+    id: {
+      type: Number,
+      index: {unique: true}
+    }
   };
 
   
@@ -131,6 +160,7 @@ var userObj = {
 var GitDevSchema = new Schema({
   user: userObj,
   repos: [ repoObj ],
+  events: [ gitEventObj ],
   updated_at: { type: Date, default: Date.now }
 });
 
