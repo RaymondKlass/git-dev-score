@@ -203,7 +203,13 @@ GitDevSchema.virtual('eventsByType').get(function() {
       eventsByType[event.type].label = eventTranslationTable[event.type];
     }
   });
-  return eventsByType;
+  var eventsByTypeArray = [];
+  for (var key in eventsByType) {
+    if ( eventsByType.hasOwnProperty(key)) {
+      eventsByTypeArray.push(eventsByType[key]);
+    }
+  }
+  return eventsByTypeArray;
 });
 
 

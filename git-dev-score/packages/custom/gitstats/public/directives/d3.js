@@ -49,7 +49,7 @@ angular.module('d3AngularApp', ['d3'])
                   color = d3.scale.category20(),
                   xScale = d3.scale.linear()
                     .domain([0, d3.max(data, function(d) {
-                      return d.score;
+                      return d.count;
                     })])
                     .range([0, width]);
  
@@ -68,12 +68,12 @@ angular.module('d3AngularApp', ['d3'])
                     return i * (barHeight + barPadding);
                   })
                   .attr('fill', function(d) {
-                    return color(d.score);
+                    return color(d.count);
                   })
                   .transition()
                     .duration(1000)
                     .attr('width', function(d) {
-                      return xScale(d.score);
+                      return xScale(d.count);
                     });
               svg.selectAll('text')
                 .data(data)
@@ -85,7 +85,7 @@ angular.module('d3AngularApp', ['d3'])
                   })
                   .attr('x', 15)
                   .text(function(d) {
-                    return d.name + ' (scored: ' + d.score + ')';
+                    return d.label + ' ' + d.count;
                   });
             }, 200);
           };
