@@ -124,60 +124,13 @@ var userObj = {
     open_issues: Number,
     watchers: Number,
     default_branch: String
-  },
-  weekObj = {
-    w: Number,
-    a: Number,
-    d: Number,
-    c: Number
-  },
-  repoAuthorObj = {
-    id: {
-      type: Number
-    },
-    login: String,
-    avatar_url: String,
-    gravatar_id: String,
-    url: String,
-    html_url: String,
-    followers_url: String,
-    following_url: String,
-    gists_url: String,
-    starred_url: String,
-    subscriptions_url: String,
-    organizations_url: String,
-    repos_url: String,
-    events_url: String,
-    received_events_url: String,
-    type: { type:String},
-    site_admin: Boolean
-  },
-  repoStatsAggObj = {
-    owner: {
-      c: Number,
-      a: Number,
-      d: Number
-    },
-    others: {
-      c: Number,
-      a: Number,
-      d: Number
-    }
   };
 
   
 // GitDev Schema
 var GitDevSchema = new Schema({
   user: userObj,
-  repos: [{
-    repo: repoObj,
-    stats: [{
-      author: repoAuthorObj,
-      total: Number,
-      weeks: [weekObj]
-    }],
-    statsAgg: repoStatsAggObj
-  }],
+  repos: [ repoObj ],
   updated_at: { type: Date, default: Date.now }
 });
 

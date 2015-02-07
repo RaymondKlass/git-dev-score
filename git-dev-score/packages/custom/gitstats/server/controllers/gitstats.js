@@ -15,11 +15,40 @@ exports.ajax_test = function(req, res) {
 };
 
 
+var GitQuery = function(git_wrapper) {
+  this.git_wrapper = git_wrapper;
+};
+
+GitQuery.prototype.get_user_info = function(git_user) {
+  var self = this;
+  return function(callback) {
+    self.git_wrapper.authenticate_app();
+    self.git_wrapper.github.user.getFrom({user:git_user}, function(err, api_res) { callback(err, api_res); });
+  };
+};
+
+GitQuery.prototype.get_user_repos = function(developer) {
+  var self = this;
+  return function(callback) {
+    self.git_wrapper.authenticate_app();
+    self.git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { console.log(api_res); callback(err, api_res); });
+  };
+};
+
+GitQuery.prototype.get_user_events = function(developer) {
+  var self = this;
+  return function(callback) {
+    self.git_wrapper.authenticate_app();
+    self.git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+  };
+};
+
 
 exports.git_developer_lookup = function(req, res) {
   var developer = req.body.username,
     gitdev = new GitDev({}),
-    git_wrapper = GitApiConfig.git_api_wrapper;
+    git_wrapper = GitApiConfig.git_api_wrapper,
+    git_wrap = new GitQuery(git_wrapper);
   
   var now = new Date(),
     dateMinus1Day =  now.setDate(now.getDate()-1),
@@ -42,109 +71,19 @@ exports.git_developer_lookup = function(req, res) {
     },
     function(callback) {
       async.parallel({
-        user: function(callback) {
-          git_wrapper.authenticate_app();
-          git_wrapper.github.user.getFrom({user:developer}, function(err, api_res) { callback(err, api_res); });
-        },
-        repos: function(callback) {
-          var user_repos = [],
-              repos_callback = callback;
-          async.series([
-            function(callback) {
-              git_wrapper.authenticate_app();
-              git_wrapper.github.repos.getFromUser({user:developer}, 
-                function(err, api_res) { 
-                  user_repos = api_res;
-                  callback(err, api_res); 
-              });
-            },
-            function(callback) {
-              var user_repo_func = [];
-              user_repos.forEach(function(element, index, array) {
-                user_repo_func.push(function(callback) {
-                  
-                  git_wrapper.authenticate_app();
-                  git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-                    
-                    if (api_res.meta.hasOwnProperty('status') && api_res.meta.status === '202 Accepted') {
-                      
-                      setTimeout(function(){
-                        git_wrapper.authenticate_app();
-                        git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-
-                          if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
-                            callback(err, {name: element.id, data : api_res});
-                          } else {
-                            setTimeout(function(){
-                              git_wrapper.authenticate_app();
-                              git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-      
-                                if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
-                                  callback(err, {name: element.id, data : api_res});
-                                }
-                                  // Here we might need another - we should switch to a library to manage this?
-                                
-                              });
-                            }, 5000);
-                          }
-                        });
-                      }, 5000);
-                    } else {
-                      callback(err, {name: element.id, data : api_res});
-                    }
-                  });  
-                });
-              });
-
-              async.parallel(user_repo_func, function(err, results) {
-                if (err) {
-                  console.log('Error');
-                  console.log(err);
-                }
-                callback(null, results);
-              });
-            }
-          ], function(err, results) {
-            
-            var repo_translate = [],
-                stats_obj = {};
-
-            if ( results.length && results[0] ) {
-                results[1].forEach(function(element, index, array) {
-                    stats_obj[element.name] = element.data;
-                });
-                
-                if (user_repos) {
-                    user_repos.forEach(function(element, index, array) {
-                        repo_translate.push({repo: element, stats: stats_obj[element.id]});
-                    });
-                }
-    
-                repos_callback(null, repo_translate);
-            } else {
-                repos_callback(null, null);
-            }
-          });
-        },
-      events: function(callback) {
-        git_wrapper.authenticate_app();
-        git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
-      }},
-      function(err, results) {
-        if (results.events) {
-          console.log(results.events);
-        }
+        user: git_wrap.get_user_info(developer),
+        repos: git_wrap.get_user_repos(developer),
+        events: git_wrap.get_user_events(developer),
+      }, function(err, results) {
+        /*if (results.events) {
+          //console.log(results.events);
+        }*/
         if (results.user) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
             gitdev.repos = results.repos;
             
-            if ( gitdev.repos.length && gitdev.repos ) {
-                var repo_stats = gitdev.aggregateRepoOwner();
-                gitdev.repos.forEach(function(repo, index, array) {
-                    repo.statsAgg = repo_stats[repo.repo.id];
-                });
-            }
+            console.log(gitdev);
             
             var gitdev_obj = gitdev.toObject();
             delete gitdev_obj._id;
