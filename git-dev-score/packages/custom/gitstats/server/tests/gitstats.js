@@ -43,6 +43,7 @@ describe('<Controller Tests>', function() {
             .get('/users/my_login/repos')
             .reply(200, git_repos)
             .get('/users/my_login/events')
+            .times(10)
             .reply(200, git_events);
             done();
         });
@@ -58,8 +59,6 @@ describe('<Controller Tests>', function() {
                         // Test Repos portion
                         data.repos[0].id.should.equal(123);
                         data.repos[1].id.should.equal(124);
-                        console.log('Here I am');
-                        console.log(data.events[0]);
                         data.events[0].id.should.equal(1234);
                         data.events[0].payload.first.should.equal(1);
                         // Make sure that both mocks were actually used
@@ -157,6 +156,7 @@ describe('<Controller Tests>', function() {
                                             .get('/users/my_login/repos')
                                             .reply(200, git_repos_update)
                                             .get('/users/my_login/events')
+                                            .times(10)
                                             .reply(200, git_events);
                                         
                                         gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
@@ -213,6 +213,7 @@ describe('<Controller Tests>', function() {
             .get('/users/my_login/repos')
             .reply(404, undefined)
             .get('/users/my_login/events')
+            .times(10)
             .reply(404, undefined);
             
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
