@@ -89,35 +89,6 @@ exports.git_developer_lookup = function(req, res) {
                           }
                         });
                       }, 5000);
-                      /*
-                      var intervals = [5],
-                        timers = [],
-                        kill_all_timers = function() {
-                          timers.forEach(function (element, index, array) {
-                            clearTimeout(element);
-                          });
-                        };
-                        
-                      intervals.forEach(function(intervalElement, index, array) {
-                        console.log(intervalElement);
-                        var intEl = intervalElement * 1000;
-                        console.log(intEl);
-                        timers.push(setTimeout(
-                          function() {
-
-                            console.log('running timeout APP ' + element.name);
-                            git_wrapper.authenticate_app();
-                            git_wrapper.github.repos.getStatsContributors({user:developer, repo:element.name}, function(err, api_res) {
-
-                              if (!api_res.meta.hasOwnProperty('status') || api_res.meta.status !== '202 Accepted') {
-                                kill_all_timers();
-
-                                callback(err, {name: element.id, data : api_res});
-                              }
-                            });
-                          }
-                          ), 2000);
-                      }); */
                     } else {
                       callback(err, {name: element.id, data : api_res});
                     }
@@ -154,9 +125,15 @@ exports.git_developer_lookup = function(req, res) {
                 repos_callback(null, null);
             }
           });
-        }
-      },
+        },
+      events: function(callback) {
+        git_wrapper.authenticate_app();
+        git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+      }},
       function(err, results) {
+        if (results.events) {
+          console.log(results.events);
+        }
         if (results.user) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
