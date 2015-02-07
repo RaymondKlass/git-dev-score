@@ -167,12 +167,31 @@ var GitDevSchema = new Schema({
   updated_at: { type: Date, default: Date.now }
 });
 
+GitDevSchema.set('toJSON', {
+  virtuals: true
+});
 
 // Validations
 GitDevSchema.path('user.login').validate(function(user) {
   return !!user;
 }, 'Username cannot be blank');
 
+
+
+// Virtual Fields
+
+// SImple aggregation for events by type
+GitDevSchema.virtual('eventsByType').get(function() {
+  var eventsByType = {};
+  this.events.forEach(function(event, index, events) {
+    if (eventsByType.hasOwnProperty(event.type)) {
+      eventsByType[event.type] += 1;
+    } else {
+      eventsByType[event.type] = 1;
+    }
+  });
+  return eventsByType;
+});
 
 
 // Methods - handle the weighting process calculations via these

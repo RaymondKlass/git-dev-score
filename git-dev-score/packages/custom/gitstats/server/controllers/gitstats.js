@@ -63,7 +63,10 @@ exports.git_developer_lookup = function(req, res) {
   
   var now = new Date(),
     dateMinus1Day =  now.setDate(now.getDate()-1),
-    query = GitDev.where({'user.login_lower' : developer.toLowerCase()}).where('updated_at').gte(dateMinus1Day);
+    query = GitDev.where({'user.login_lower' : developer.toLowerCase()})
+                  .where('updated_at')
+                  .gte(dateMinus1Day)
+                  .select('user events repos updated_at eventsByType');
 
   
   async.series([
@@ -73,6 +76,7 @@ exports.git_developer_lookup = function(req, res) {
           console.log(err);
           res.json({'Status' : 'Error'});
         } else if (gitDeveloper) {
+          console.log(gitDeveloper.eventsByType);
           res.json(gitDeveloper);
           return; 
         } else {
