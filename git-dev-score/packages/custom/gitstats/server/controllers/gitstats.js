@@ -65,7 +65,6 @@ GitQuery.prototype.get_user_events = function(developer, max_pages) {
         result.forEach(function(event_result, index, results_array) {
           api_concat = api_concat.concat(event_result);
         });
-        console.log(api_concat);
         callback(err, api_concat);
       } else {
         // return the error
