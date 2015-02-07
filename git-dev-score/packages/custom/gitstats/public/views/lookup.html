@@ -67,6 +67,10 @@
         <p>{{git_data.status}}</p>
       </div>
       <div class="col-sm-9 page-header">
+          <div class="col-sm-12 page-header" ng-repeat="event in git_data.events | filter: {type : 'PushEvent'}">
+            <h4>Push Event</h4>
+            <p>{{event.repo.name}}</p>
+          </div>
           <div class="col-sm-12 page-header" ng-repeat="repo in git_data.repos">
             <h4><a href="{{repo.html_url}}">{{repo.name}}</a></h4></td>
             <p>Watchers: {{repo.watchers}} | Size: {{repo.size}} | Fork: {{repo.fork}} | Updated: {{repo.updated_at | date:'MMM d, yyyy'}}</p>
