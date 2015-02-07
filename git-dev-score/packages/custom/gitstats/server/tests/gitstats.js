@@ -18,7 +18,12 @@ var should = require('should'),
          'name': 'my_second_repo'
       }
     ],
-    git_events = [];
+    git_events = [
+      {'id': 1234,
+        'type': 'pushEvent',
+        'payload': {'first': 1, 'second':2}
+      }
+    ];
 
 // Globals
 var gitdev,
@@ -53,7 +58,10 @@ describe('<Controller Tests>', function() {
                         // Test Repos portion
                         data.repos[0].id.should.equal(123);
                         data.repos[1].id.should.equal(124);
-                        
+                        console.log('Here I am');
+                        console.log(data.events[0]);
+                        data.events[0].id.should.equal(1234);
+                        data.events[0].payload.first.should.equal(1);
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
 

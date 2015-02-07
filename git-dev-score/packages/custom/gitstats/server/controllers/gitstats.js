@@ -15,6 +15,13 @@ exports.ajax_test = function(req, res) {
 };
 
 
+
+/*
+ * Git Query Class
+ *
+ * Wraps Github API and handles authentication - returns API response or error
+*/
+
 var GitQuery = function(git_wrapper) {
   this.git_wrapper = git_wrapper;
 };
@@ -31,7 +38,7 @@ GitQuery.prototype.get_user_repos = function(developer) {
   var self = this;
   return function(callback) {
     self.git_wrapper.authenticate_app();
-    self.git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { console.log(api_res); callback(err, api_res); });
+    self.git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
   };
 };
 
@@ -42,6 +49,10 @@ GitQuery.prototype.get_user_events = function(developer) {
     self.git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
   };
 };
+
+
+
+
 
 
 exports.git_developer_lookup = function(req, res) {
@@ -82,8 +93,6 @@ exports.git_developer_lookup = function(req, res) {
             gitdev.repos = results.repos;
             gitdev.events = results.events;
             
-            console.log(gitdev);
-            
             var gitdev_obj = gitdev.toObject();
             delete gitdev_obj._id;
             
@@ -91,6 +100,7 @@ exports.git_developer_lookup = function(req, res) {
               if (err) {
                 console.log(err);
               } else {
+                console.log(row.events[0]);
                 res.json(row);
               }
             });

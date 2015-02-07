@@ -125,8 +125,11 @@ var userObj = {
     watchers: Number,
     default_branch: String
   },
+  payload = new Schema({ any: Schema.Types.Mixed }),
   gitEventObj = {
-    type: String,
+    type: {
+      type: String,
+    },
     public: {
       type: String
     },
@@ -148,6 +151,7 @@ var userObj = {
       gravatar_url: String,
       avatar_url: String,
     },
+    payload: {},
     created: Date,
     id: {
       type: Number,
