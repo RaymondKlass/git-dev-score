@@ -5,6 +5,18 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 
+var eventTranslationTable = {
+  'CreateEvent': 'Create Repo',
+  'PushEvent': 'Push',
+  'ForkEvent': 'Fork',
+  'WatchEvent': 'Watch',
+  'DeleteEvent': 'Delete',
+  'IssuesEvent': 'Issue',
+  'IssueCommentEvent': 'Comment',
+  'PullRequestEvent': 'Pull Request',
+  'ReleaseEvent': 'Release'
+};
+
 
 var userObj = {
     login:{
@@ -185,9 +197,10 @@ GitDevSchema.virtual('eventsByType').get(function() {
   var eventsByType = {};
   this.events.forEach(function(event, index, events) {
     if (eventsByType.hasOwnProperty(event.type)) {
-      eventsByType[event.type] += 1;
+      eventsByType[event.type].count += 1;
     } else {
-      eventsByType[event.type] = 1;
+      eventsByType[event.type] = { count : 1 };
+      eventsByType[event.type].label = eventTranslationTable[event.type];
     }
   });
   return eventsByType;
