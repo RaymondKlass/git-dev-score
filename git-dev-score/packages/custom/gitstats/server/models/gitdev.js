@@ -125,7 +125,6 @@ var userObj = {
     watchers: Number,
     default_branch: String
   },
-  payload = new Schema({ any: Schema.Types.Mixed }),
   gitEventObj = {
     type: {
       type: String,
