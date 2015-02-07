@@ -18,25 +18,7 @@ var should = require('should'),
          'name': 'my_second_repo'
       }
     ],
-    git_repo_stats = 
-      [{
-        author: {
-          'id': 123
-        },
-        total: 25, 
-        weeks:[
-          {w: 12,
-            a: 10,
-            d: 4,
-            c: 13
-          }, {
-            w: 3,
-            a: 4,
-            d: 7,
-            c: 2
-          }
-        ]
-      }];
+    git_events = [];
 
 // Globals
 var gitdev,
@@ -55,10 +37,8 @@ describe('<Controller Tests>', function() {
             .reply(200, git_user)
             .get('/users/my_login/repos')
             .reply(200, git_repos)
-            .get('/repos/my_login/my_first_repo/stats/contributors')
-            .reply(200, git_repo_stats)
-            .get('/repos/my_login/my_second_repo/stats/contributors')
-            .reply(200, git_repo_stats);
+            .get('/users/my_login/events')
+            .reply(200, git_events);
             done();
         });
         
@@ -71,12 +51,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].repo.id.should.equal(123);
-                        data.repos[1].repo.id.should.equal(124);
-                        data.repos[0].stats[0].author.id.should.equal(123);
-                        data.repos[1].stats[0].author.id.should.equal(123);
-                        data.repos[0].statsAgg.owner.c.should.equal(0);
-                        data.repos[0].statsAgg.others.c.should.equal(15);
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -95,10 +71,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].repo.id.should.equal(123);
-                        data.repos[1].repo.id.should.equal(124);
-                        data.repos[0].stats[0].author.id.should.equal(123);
-                        data.repos[1].stats[0].author.id.should.equal(123);
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -120,10 +94,8 @@ describe('<Controller Tests>', function() {
                                     data.user.login.should.equal('My_Login');
                                     data.user.login_lower.should.equal('my_login');
                                     // Test Repos portion
-                                    data.repos[0].repo.id.should.equal(123);
-                                    data.repos[1].repo.id.should.equal(124);
-                                    data.repos[0].stats[0].author.id.should.equal(123);
-                                    data.repos[1].stats[0].author.id.should.equal(123);
+                                    data.repos[0].id.should.equal(123);
+                                    data.repos[1].id.should.equal(124);
                                     
                                     git_user_mock.isDone().should.equal(false);
                                     git_user_mock.pendingMocks().length.should.equal(2);
@@ -143,10 +115,8 @@ describe('<Controller Tests>', function() {
                         data.user.login.should.equal('My_Login');
                         data.user.login_lower.should.equal('my_login');
                         // Test Repos portion
-                        data.repos[0].repo.id.should.equal(123);
-                        data.repos[1].repo.id.should.equal(124);
-                        data.repos[0].stats[0].author.id.should.equal(123);
-                        data.repos[1].stats[0].author.id.should.equal(123);
+                        data.repos[0].id.should.equal(123);
+                        data.repos[1].id.should.equal(124);
                         
                         // Make sure that both mocks were actually used
                         git_user_mock.isDone().should.equal(true);
@@ -178,8 +148,8 @@ describe('<Controller Tests>', function() {
                                             .reply(200, git_user_update)
                                             .get('/users/my_login/repos')
                                             .reply(200, git_repos_update)
-                                            .get('/repos/my_login/my_first_repo1/stats/contributors')
-                                            .reply(200, git_repo_stats);
+                                            .get('/users/my_login/events')
+                                            .reply(200, git_events);
                                         
                                         gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
                                             {
@@ -190,9 +160,8 @@ describe('<Controller Tests>', function() {
                                                     data.user.login_lower.should.equal('my_login');
                                                     data.user.name.should.equal('Big Bad Developer');
                                                     // Test Repos portion
-                                                    data.repos[0].repo.id.should.equal(123);
-                                                    data.repos[0].repo.name.should.equal('my_first_repo1');
-                                                    data.repos[0].stats[0].author.id.should.equal(123);
+                                                    data.repos[0].id.should.equal(123);
+                                                    data.repos[0].name.should.equal('my_first_repo1');
                                                     data.repos.length.should.equal(1);
                                                     
                                                     git_user_mock.isDone().should.equal(true);
@@ -234,6 +203,8 @@ describe('<Controller Tests>', function() {
             .get('/users/my_login')
             .reply(404, undefined)
             .get('/users/my_login/repos')
+            .reply(404, undefined)
+            .get('/users/my_login/events')
             .reply(404, undefined);
             
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
