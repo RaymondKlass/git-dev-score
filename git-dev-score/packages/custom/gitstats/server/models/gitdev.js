@@ -180,7 +180,7 @@ GitDevSchema.path('user.login').validate(function(user) {
 
 // Virtual Fields
 
-// SImple aggregation for events by type
+// Simple aggregation for events by type
 GitDevSchema.virtual('eventsByType').get(function() {
   var eventsByType = {};
   this.events.forEach(function(event, index, events) {
@@ -192,6 +192,8 @@ GitDevSchema.virtual('eventsByType').get(function() {
   });
   return eventsByType;
 });
+
+
 
 
 // Methods - handle the weighting process calculations via these

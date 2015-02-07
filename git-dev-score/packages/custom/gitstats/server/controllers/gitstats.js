@@ -42,11 +42,36 @@ GitQuery.prototype.get_user_repos = function(developer) {
   };
 };
 
-GitQuery.prototype.get_user_events = function(developer) {
+GitQuery.prototype.get_user_events = function(developer, max_pages) {
   var self = this;
+  if (!max_pages) {
+    max_pages = 10;
+  }
+  
   return function(callback) {
-    self.git_wrapper.authenticate_app();
-    self.git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+    var parallelFunc = [];
+    for (var i = 1; i <= max_pages; i+=1) {
+      parallelFunc.push( function(callback) {
+        self.git_wrapper.authenticate_app();
+        self.git_wrapper.github.events.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+      });
+    }
+    
+    async.parallel(parallelFunc, function(err, result) {
+      var api_concat = [];
+      console.log(result);
+      if (!err) {
+        // We should concatenate
+        result.forEach(function(event_result, index, results_array) {
+          api_concat = api_concat.concat(event_result);
+        });
+        console.log(api_concat);
+        callback(err, api_concat);
+      } else {
+        // return the error
+        callback(err, null);
+      }
+    });
   };
 };
 
@@ -86,7 +111,7 @@ exports.git_developer_lookup = function(req, res) {
       async.parallel({
         user: git_wrap.get_user_info(developer),
         repos: git_wrap.get_user_repos(developer),
-        events: git_wrap.get_user_events(developer),
+        events: git_wrap.get_user_events(developer, 10),
       }, function(err, results) {
         
         if (results.user) {
