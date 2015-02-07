@@ -68,12 +68,12 @@
       </div>
       <div class="col-sm-9 page-header">
           <div class="col-sm-12 page-header" ng-repeat="repo in git_data.repos">
-            <h4><a href="{{repo.repo.html_url}}">{{repo.repo.name}}</a></h4></td>
-            <p>Watchers: {{repo.repo.watchers}} | Size: {{repo.repo.size}} | Fork: {{repo.repo.fork}} | Updated: {{repo.repo.updated_at | date:'MMM d, yyyy'}}</p>
-            <h4>Statistics</h4>
+            <h4><a href="{{repo.html_url}}">{{repo.name}}</a></h4></td>
+            <p>Watchers: {{repo.watchers}} | Size: {{repo.size}} | Fork: {{repo.fork}} | Updated: {{repo.updated_at | date:'MMM d, yyyy'}}</p>
+            <!-- <h4>Statistics</h4>
             <p>{{git_data.user.name}} Commits: {{repo.statsAgg.owner.c}} | Additions: {{repo.statsAgg.owner.a}} | Deletions: {{repo.statsAgg.owner.d}}</p>
             <div d3-bars bar-height="20" bar-padding="5" data="repo.statsAgg.owner"></div>
-            <p>Others Stats - Commits: {{repo.statsAgg.others.c}} | Additions: {{repo.statsAgg.others.a}} | Deletions: {{repo.statsAgg.others.d}}</p>
+            <p>Others Stats - Commits: {{repo.statsAgg.others.c}} | Additions: {{repo.statsAgg.others.a}} | Deletions: {{repo.statsAgg.others.d}}</p> -->
           </div>
     </div>
   </div>
