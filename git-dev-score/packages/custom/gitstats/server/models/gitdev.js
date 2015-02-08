@@ -194,8 +194,9 @@ GitDevSchema.path('user.login').validate(function(user) {
 // Virtual Fields
 
 // Simple aggregation for events by type
-GitDevSchema.virtual('eventsByType').get(function() {
-  var eventsByType = {};
+GitDevSchema.virtual('eventsAgg').get(function() {
+  var eventsByType = {},
+      eventsByRepo = {};
   this.events.forEach(function(event, index, events) {
     // Aggregate event Types
     if (eventsByType.hasOwnProperty(event.type)) {
@@ -206,79 +207,33 @@ GitDevSchema.virtual('eventsByType').get(function() {
     }
     
     // Aggregate events by repo
-    
+    if (eventsByRepo.hasOwnProperty(event.repo.id)) {
+      eventsByRepo[event.repo.id].count += 1;
+    } else {
+      eventsByRepo[event.repo.id] = { count : 1 };
+      eventsByRepo[event.repo.id].label = event.repo.name;
+      eventsByRepo[event.repo.id].url = event.repo.url;
+    }
     
   });
-  var eventsByTypeArray = [];
+  var eventsByTypeArray = [],
+      eventsByRepoArray = [];
   for (var key in eventsByType) {
     if ( eventsByType.hasOwnProperty(key)) {
       eventsByTypeArray.push(eventsByType[key]);
     }
   }
-  return eventsByTypeArray;
-});
-
-
-
-
-// Methods - handle the weighting process calculations via these
-
-GitDevSchema.methods.aggregateRepoOwner = function aggregateRepoOwner() {
-  // Handle the case that the user has no repos
-  if ( !this.repos.length) {
-    return null;
+  
+  for (key in eventsByRepo) {
+    if ( eventsByRepo.hasOwnProperty(key)) {
+      eventsByRepoArray.push(eventsByRepo[key]);
+    }
   }
   
-  var repoAgg = {},
-    user = '',
-    userContribAgg = {},
-    self = this;
-  
-  this.repos.forEach(function(repoElement, index, array) {
-    repoAgg[repoElement.repo.id] = {
-      owner:{
-        c:0,
-        a:0,
-        d:0
-      },
-      others: {
-        c:0,
-        a:0,
-        d:0
-      }
-    };
-    
-    repoElement.stats.forEach(function(statElement, statIndex, statArray) {
-      if ( statElement.author.id === self.user.id) {
-        user = 'owner';
-      } else {
-        user = 'others';
-      }
-      
-      // We need to aggregate the stat element too.
-      userContribAgg = {
-        c:0,
-        a:0, 
-        d:0
-      };
-      
-      statElement.weeks.forEach( function(statWeekElement, statWeekIndex, statWeekArray) {
-        userContribAgg.c += statWeekElement.c;
-        userContribAgg.a += statWeekElement.a;
-        userContribAgg.d += statWeekElement.d;
-      });
-      
-      repoAgg[repoElement.repo.id][user].c += userContribAgg.c;
-      repoAgg[repoElement.repo.id][user].a += userContribAgg.a;
-      repoAgg[repoElement.repo.id][user].d += userContribAgg.d;
-      
-    });
+  return {eventsByType: eventsByTypeArray, 
+          eventsByRepo: eventsByRepoArray};
+});
 
-  });
-  
-  return(repoAgg);
-  
-};
 
 
 // Assign model

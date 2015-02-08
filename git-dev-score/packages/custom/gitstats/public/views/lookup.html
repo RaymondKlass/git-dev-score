@@ -23,7 +23,10 @@
         <p>{{git_data.status}}</p>
       </div>
       <div class="col-sm-9 page-header">
-          <div d3-bars bar-height="20" bar-padding="5" data="git_data.eventsByType"></div>
+          <h3>Recent Events By Type</h3>
+          <div d3-bars bar-height="20" bar-padding="5" data="git_data.eventsAgg.eventsByType"></div>
+          <h3>Recent Events By Repo</h3>
+          <div d3-bars bar-height="20" bar-padding="5" data="git_data.eventsAgg.eventsByRepo"></div>
           <div class="col-sm-12 page-header" ng-repeat="event in git_data.events | filter: {type : 'PushEvent'}">
             <h4>Push Event</h4>
             <p>{{event.repo.name}}</p>
