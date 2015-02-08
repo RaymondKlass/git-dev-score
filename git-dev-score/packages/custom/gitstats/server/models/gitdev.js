@@ -236,7 +236,7 @@ GitDevSchema.virtual('eventsAgg').get(function() {
 });
 
 
-// Aggregation ofr Language Stats
+// Aggregation for Language Stats
 GitDevSchema.virtual('languageAgg').get(function() {
   var languageAgg = {};
   this.repos.forEach(function(repo, index, repos_array) {
