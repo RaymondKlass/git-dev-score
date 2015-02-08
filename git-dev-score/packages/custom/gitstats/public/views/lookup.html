@@ -23,6 +23,8 @@
         <p>{{git_data.status}}</p>
       </div>
       <div class="col-sm-9 page-header">
+          <h3>Repo - languages (non-forks):</h3>
+          <div d3-bars bar-height="20" bar-padding="5" data="git_data.languageAgg"></div>
           <h3>Recent Events By Type</h3>
           <div d3-bars bar-height="20" bar-padding="5" data="git_data.eventsAgg.eventsByType"></div>
           <h3>Recent Events By Repo</h3>
