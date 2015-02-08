@@ -236,6 +236,30 @@ GitDevSchema.virtual('eventsAgg').get(function() {
 });
 
 
+// Aggregation ofr Language Stats
+GitDevSchema.virtual('languageAgg').get(function() {
+  var languageAgg = {};
+  this.repos.forEach(function(repo, index, repos_array) {
+    if ( repo.languages && repo.fork === false) {
+      for ( var key in repo.languages ) {
+        if ( repo.languages.hasOwnProperty(key) ) {
+          if ( !languageAgg.hasOwnProperty(key) ) {
+            languageAgg[key] = 0;
+          }
+          languageAgg[key] += repo.languages[key];
+        }
+      }
+    }
+  });
+  // return in a way that's more usuable in a chart
+  var languageAggArray = [];
+  for (var key in languageAgg) {
+    if( languageAgg.hasOwnProperty(key) ) {
+      languageAggArray.push({count: languageAgg[key], label: key});
+    }
+  }
+  return languageAggArray;
+});
 
 // Assign model
 mongoose.model('GitDev', GitDevSchema);

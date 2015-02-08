@@ -52,7 +52,7 @@ describe('<Controller Tests>', function() {
             .get('/repos/my_login/my_first_repo/languages')
             .reply(200, git_languages)
             .get('/repos/my_login/my_second_repo/languages')
-            .reply(200, git_languages)
+            .reply(200, git_languages);
             done();
         });
         
