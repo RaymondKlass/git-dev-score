@@ -52,13 +52,14 @@ GitQuery.prototype.get_user_repos = function(developer) {
             language_func.push( function(callback) {
               self.git_wrapper.authenticate_app();
               self.git_wrapper.github.repos.getLanguages({user:developer, repo:repo.name}, 
-                                                          function(err, api_res) { 
-                                                            if (!err) {
-                                                              delete api_res.meta;
-                                                              repos[index].languages = api_res;
-                                                            }
-                                                            callback(err, api_res);
-                                                          });
+                function(err, api_res) { 
+                  if (!err) {
+                    delete api_res.meta;
+                    repos[index].languages = api_res;
+                  }
+                  callback(err, api_res);
+                }
+              );
             });
           });
           

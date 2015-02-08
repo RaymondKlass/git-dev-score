@@ -23,7 +23,11 @@ var should = require('should'),
         'type': 'pushEvent',
         'payload': {'first': 1, 'second':2}
       }
-    ];
+    ],
+    git_languages = {
+      'Python': 123,
+      'C': 35
+    };
 
 // Globals
 var gitdev,
@@ -44,7 +48,11 @@ describe('<Controller Tests>', function() {
             .reply(200, git_repos)
             .get('/users/my_login/events')
             .times(10)
-            .reply(200, git_events);
+            .reply(200, git_events)
+            .get('/repos/my_login/my_first_repo/languages')
+            .reply(200, git_languages)
+            .get('/repos/my_login/my_second_repo/languages')
+            .reply(200, git_languages)
             done();
         });
         
@@ -157,7 +165,9 @@ describe('<Controller Tests>', function() {
                                             .reply(200, git_repos_update)
                                             .get('/users/my_login/events')
                                             .times(10)
-                                            .reply(200, git_events);
+                                            .reply(200, git_events)
+                                            .get('/repos/my_login/my_first_repo1/languages')
+                                            .reply(200, git_languages);
                                         
                                         gitstats_controller.git_developer_lookup({body: {username: 'my_login'}}, 
                                             {
@@ -213,8 +223,7 @@ describe('<Controller Tests>', function() {
             .get('/users/my_login/repos')
             .reply(404, undefined)
             .get('/users/my_login/events')
-            .times(10)
-            .reply(404, undefined);
+            .times(10);
             
             gitstats_controller.git_developer_lookup({body: {username: 'my_login'}},
                 {
