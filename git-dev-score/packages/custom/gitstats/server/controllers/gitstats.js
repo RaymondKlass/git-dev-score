@@ -37,8 +37,40 @@ GitQuery.prototype.get_user_info = function(git_user) {
 GitQuery.prototype.get_user_repos = function(developer) {
   var self = this;
   return function(callback) {
-    self.git_wrapper.authenticate_app();
-    self.git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+    var finished_callback = callback;
+    // We need to change this to also access Language stats...
+    async.series([
+      function(callback) {
+        self.git_wrapper.authenticate_app();
+        self.git_wrapper.github.repos.getFromUser({user:developer}, function(err, api_res) { callback(err, api_res); });
+      }],
+      function(err, results) {
+        if (!err && results.length) {
+          var repos = results[0],
+              language_func = [];
+          repos.forEach(function(repo, index, repos_array) {
+            language_func.push( function(callback) {
+              self.git_wrapper.authenticate_app();
+              self.git_wrapper.github.repos.getLanguages({user:developer, repo:repo.name}, 
+                                                          function(err, api_res) { 
+                                                            if (!err) {
+                                                              delete api_res.meta;
+                                                              repos[index].languages = api_res;
+                                                            }
+                                                            callback(err, api_res);
+                                                          });
+            });
+          });
+          
+          async.parallel(language_func,
+          function(err, results) {
+            finished_callback(err, repos);
+          });
+        } else {
+          finished_callback(err, []);
+        }
+      }
+    );
   };
 };
 

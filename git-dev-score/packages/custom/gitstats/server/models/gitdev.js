@@ -72,6 +72,7 @@ var userObj = {
       type: Number,
       index: {unique: true}
     },
+    languages: {},
     name: String,
     full_name: String,
     private: Boolean,
