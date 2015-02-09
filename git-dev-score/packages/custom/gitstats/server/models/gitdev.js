@@ -261,5 +261,9 @@ GitDevSchema.virtual('languageAgg').get(function() {
   return languageAggArray;
 });
 
+
+// Get some recent Commits (See Code Samples)
+
+
 // Assign model
 mongoose.model('GitDev', GitDevSchema);
