@@ -263,6 +263,9 @@ GitDevSchema.virtual('languageAgg').get(function() {
 
 
 // Get some recent Commits (See Code Samples)
+GitDevSchema.virtual('recentCommits').get(function() {
+
+});
 
 
 // Assign model
