@@ -75,7 +75,7 @@ GitQuery.prototype.get_user_repos = function(developer) {
   };
 };
 
-GitQuery.prototype.get_user_events = function(developer, max_pages) {
+GitQuery.prototype.get_user_events = function(developer, max_pages, include_recent_code) {
   var self = this;
   if (!max_pages) {
     max_pages = 10;
@@ -99,6 +99,10 @@ GitQuery.prototype.get_user_events = function(developer, max_pages) {
         result.forEach(function(event_result, index, results_array) {
           api_concat = api_concat.concat(event_result);
         });
+        
+        // Here we could put code to also grab recent code contrib - if option set
+        
+        
         callback(err, api_concat);
       } else {
         // return the error
@@ -107,7 +111,6 @@ GitQuery.prototype.get_user_events = function(developer, max_pages) {
     });
   };
 };
-
 
 
 
