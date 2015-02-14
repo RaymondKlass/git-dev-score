@@ -143,17 +143,20 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
             if ( commitFunc.length ) {
               async.parallel(commitFunc, function(err, result) {
                 if ( err ) {
-                  console.log(err);
-                  //callback(err, null);
+                  callback(err, null);
                 } else {
-                  console.log(result);
+                  var commit_concat = [];
+                  result.forEach(function(commit, index, commits_array) {
+                    commit_concat = commit_concat.concat(commit);
+                  });
+                  callback(err, {repos: api_concat, commits: commit_concat});
                 }
               });
             }
              
         }
         
-        callback(err, api_concat);
+        callback(err, {repos: api_concat});
       } else {
         // return the error
         callback(err, null);
@@ -203,7 +206,8 @@ exports.git_developer_lookup = function(req, res) {
         if (results.user) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
-            gitdev.repos = results.repos;
+            gitdev.repos = results.repos.repos;
+            gitdev.commits = results.repos.commits;
             gitdev.events = results.events;
             
             var gitdev_obj = gitdev.toObject();
