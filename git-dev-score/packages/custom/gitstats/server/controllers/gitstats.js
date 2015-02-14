@@ -107,9 +107,17 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
             var commits = [];
             api_concat.forEach(function(event, index, event_array) {
               if ( event.type === 'PushEvent' ) {
-                var commitGroup = [];
+                var commitGroup = [],
+                    repo = null,
+                    repoOwner = null;
+                
+                repo = event.repo.name.split('/');
+                repoOwner = repo[0];
+                repo = repo[repo.length -1];
+                
+                
                 event.payload.commits.forEach(function(commit, index, commits_array) {
-                  commitGroup.push({repo: event.repo.name, sha: commit.sha});
+                  commitGroup.push({repo: repo, sha: commit.sha, repoOwner: repoOwner});
                 });
                 if ( commitGroup.length ) {
                   commits.push(commitGroup);
@@ -119,14 +127,14 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
             
             // Now we would need to go through and grab the commits...
             commits = commits.slice(0, 5); // only grab the 5 most recent (though this could change later...)
-            
+            console.log(commits);
             var commitFunc = [];
             
             commits.forEach(function(commitGroup, index, commit_group_array) {
               commitGroup.forEach(function(commit, commitIndex, commit_array ) {
                 commitFunc.push( function(callback) {
-                    self.git_wrapper.authenticate_app();
-                    self.git_wrapper.github.repos.getCommit({user: developer, repo: commit.repo, sha: commit.sha}, 
+                  self.git_wrapper.authenticate_app();
+                  self.git_wrapper.github.repos.getCommit({user: commit.repoOwner, repo: commit.repo, sha: commit.sha}, 
                                                             function(err, api_res) {callback(err, api_res); });
                 });
               });
