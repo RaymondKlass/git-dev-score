@@ -101,7 +101,49 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
         });
         
         // Here we could put code to also grab recent code contrib - if option set
-        
+        if (include_recent_code) {
+            
+            // Let's gather a list of the recent push events
+            var commits = [];
+            api_concat.forEach(function(event, index, event_array) {
+              if ( event.type === 'PushEvent' ) {
+                var commitGroup = [];
+                event.payload.commits.forEach(function(commit, index, commits_array) {
+                  commitGroup.push({repo: event.repo.name, sha: commit.sha});
+                });
+                if ( commitGroup.length ) {
+                  commits.push(commitGroup);
+                }
+              }
+            });
+            
+            // Now we would need to go through and grab the commits...
+            commits = commits.slice(0, 5); // only grab the 5 most recent (though this could change later...)
+            
+            var commitFunc = [];
+            
+            commits.forEach(function(commitGroup, index, commit_group_array) {
+              commitGroup.forEach(function(commit, commitIndex, commit_array ) {
+                commitFunc.push( function(callback) {
+                    self.git_wrapper.authenticate_app();
+                    self.git_wrapper.github.repos.getCommit({user: developer, repo: commit.repo, sha: commit.sha}, 
+                                                            function(err, api_res) {callback(err, api_res); });
+                });
+              });
+            });
+            console.log(commitFunc.length);
+            if ( commitFunc.length ) {
+              async.parallel(commitFunc, function(err, result) {
+                if ( err ) {
+                  console.log(err);
+                  //callback(err, null);
+                } else {
+                  console.log(result);
+                }
+              });
+            }
+             
+        }
         
         callback(err, api_concat);
       } else {
@@ -147,7 +189,7 @@ exports.git_developer_lookup = function(req, res) {
       async.parallel({
         user: git_wrap.get_user_info(developer),
         repos: git_wrap.get_user_repos(developer),
-        events: git_wrap.get_user_events(developer, 10),
+        events: git_wrap.get_user_events(developer, 10, true),
       }, function(err, results) {
         
         if (results.user) {
