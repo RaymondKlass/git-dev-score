@@ -204,7 +204,11 @@ exports.git_developer_lookup = function(req, res) {
         if (results.user) {
             gitdev.user = results.user;
             gitdev.user.login_lower = results.user.login.toLowerCase();
-            gitdev.repos = results.repos.repos;
+            
+            if ( results.repos.repos && results.repos.repos.length ) {
+              gitdev.repos = results.repos.repos;
+            }
+            
             gitdev.commits = results.repos.commits;
             gitdev.events = results.events;
             
