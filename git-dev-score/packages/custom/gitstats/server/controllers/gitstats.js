@@ -127,7 +127,6 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
             
             // Now we would need to go through and grab the commits...
             commits = commits.slice(0, 5); // only grab the 5 most recent (though this could change later...)
-            console.log(commits);
             var commitFunc = [];
             
             commits.forEach(function(commitGroup, index, commit_group_array) {
@@ -139,7 +138,6 @@ GitQuery.prototype.get_user_events = function(developer, max_pages, include_rece
                 });
               });
             });
-            console.log(commitFunc.length);
             if ( commitFunc.length ) {
               async.parallel(commitFunc, function(err, result) {
                 if ( err ) {
